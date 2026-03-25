@@ -12,6 +12,10 @@ use App\Http\Controllers\YearEndController;
 use App\Http\Controllers\CycleController;
 use App\Http\Controllers\HomeController;
 
+
+Route::get('/', function () {
+    return view('index');
+})->name('index');
 Auth::routes();
 
 /*
