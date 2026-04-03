@@ -27,6 +27,7 @@ class Loan extends Model
         'purpose',
         'issued_by',
         'cycle_id',
+        'interest_paid',
     ];
 
     protected $casts = [
@@ -122,14 +123,32 @@ class Loan extends Model
 
     public function recordRepayment(float $amount): void
     {
+        $remaining = $amount;
+    
+        // 1. Pay off penalty first
+        if ($this->penalty_amount > 0) {
+            $penaltyPayment = min($remaining, $this->penalty_amount);
+            $this->penalty_amount -= $penaltyPayment;
+            $remaining -= $penaltyPayment;
+        }
+    
+        // 2. Pay off interest
+        $interestOwed = $this->interest - $this->interest_paid;
+        if ($remaining > 0 && $interestOwed > 0) {
+            $interestPayment = min($remaining, $interestOwed);
+            $this->interest_paid += $interestPayment;
+            $remaining -= $interestPayment;
+        }
+    
+        // 3. Remainder goes to principal
         $this->amount_repaid += $amount;
         $this->outstanding_balance -= $amount;
-
+    
         if ($this->outstanding_balance <= 0) {
             $this->outstanding_balance = 0;
             $this->status = 'repaid';
         }
-
+    
         $this->save();
     }
 }

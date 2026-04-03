@@ -13,274 +13,88 @@
             line-height: 1.5;
         }
 
-        /* ── Header ────────────────────────────────────────── */
-        .header-accent-top {
-            height: 5px;
-            background: #e8a020;
-        }
-        .header {
-            background: #0f2d5e;
-            padding: 28px 36px 24px;
-        }
-        .header-accent-bottom {
-            height: 5px;
-            background: #e8a020;
-        }
+        .header-accent-top { height: 5px; background: #e8a020; }
+        .header { background: #0f2d5e; padding: 28px 36px 24px; }
+        .header-accent-bottom { height: 5px; background: #e8a020; }
         .header-table { width: 100%; }
-        .header-table td {
-            vertical-align: top;
-            padding: 0;
-            border: none;
-            background: none;
-        }
+        .header-table td { vertical-align: top; padding: 0; border: none; background: none; }
         .statement-badge {
-            background: #e8a020;
-            color: #fff;
-            font-size: 8.5px;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 3px;
-            display: inline-block;
-            margin-bottom: 10px;
+            background: #e8a020; color: #fff; font-size: 8.5px; font-weight: bold;
+            letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px;
+            border-radius: 3px; display: inline-block; margin-bottom: 10px;
         }
-        .member-name {
-            font-size: 21px;
-            font-weight: bold;
-            color: #ffffff;
-            letter-spacing: -0.2px;
-            line-height: 1.1;
-            margin-bottom: 3px;
-        }
-        .society-name {
-            font-size: 12px;
-            color: #7fa8d4;
-        }
+        .member-name { font-size: 21px; font-weight: bold; color: #ffffff; letter-spacing: -0.2px; line-height: 1.1; margin-bottom: 3px; }
+        .society-name { font-size: 12px; color: #7fa8d4; }
         .header-right-cell { text-align: right; }
-        .period-label {
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #7fa8d4;
-            margin-bottom: 4px;
-        }
-        .period-value {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-        .cycle-value {
-            font-size: 10px;
-            color: #a8c8e8;
-            margin-top: 3px;
-        }
+        .period-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #7fa8d4; margin-bottom: 4px; }
+        .period-value { font-size: 16px; font-weight: bold; color: #ffffff; }
+        .cycle-value { font-size: 10px; color: #a8c8e8; margin-top: 3px; }
 
-        /* ── Page body ─────────────────────────────────────── */
         .page-body { padding: 28px 36px; }
+        .page-label { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: #b0b8cc; text-align: right; margin-bottom: 18px; }
 
-        .page-label {
-            font-size: 8px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #b0b8cc;
-            text-align: right;
-            margin-bottom: 18px;
-        }
-
-        /* ── Section title ─────────────────────────────────── */
         .section-title {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #0f2d5e;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #e8a020;
+            font-size: 9px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
+            color: #0f2d5e; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #e8a020;
         }
 
-        /* ── KPI row ───────────────────────────────────────── */
-        .kpi-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 8px;
-            margin-bottom: 24px;
-            margin-left: -8px;
-        }
+        .kpi-table { width: 100%; border-collapse: separate; border-spacing: 8px; margin-bottom: 24px; margin-left: -8px; }
         .kpi-cell { width: 25%; vertical-align: top; }
-        .kpi-card {
-            background: #f4f7fc;
-            border: 1px solid #dde5f0;
-            border-radius: 5px;
-            padding: 12px 14px;
-            border-left: 3px solid #0f2d5e;
-        }
+        .kpi-card { background: #f4f7fc; border: 1px solid #dde5f0; border-radius: 5px; padding: 12px 14px; border-left: 3px solid #0f2d5e; }
         .kpi-card.green  { border-left-color: #1a7c5a; background: #f0faf5; border-color: #b8dece; }
         .kpi-card.red    { border-left-color: #c0392b; background: #fdf4f3; border-color: #f0c8c5; }
         .kpi-card.gold   { border-left-color: #e8a020; background: #fffbf0; border-color: #f0d890; }
-        .kpi-label {
-            font-size: 8.5px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: #6b7a99;
-            margin-bottom: 5px;
-        }
-        .kpi-value {
-            font-size: 17px;
-            font-weight: bold;
-            color: #0f2d5e;
-            line-height: 1;
-        }
+        .kpi-label { font-size: 8.5px; letter-spacing: 0.8px; text-transform: uppercase; color: #6b7a99; margin-bottom: 5px; }
+        .kpi-value { font-size: 17px; font-weight: bold; color: #0f2d5e; line-height: 1; }
         .kpi-card.green .kpi-value { color: #1a7c5a; }
         .kpi-card.red   .kpi-value { color: #c0392b; }
         .kpi-card.gold  .kpi-value { color: #8a5a00; }
         .kpi-sub { font-size: 8px; color: #9aa5be; margin-top: 3px; }
 
-        /* ── Data table ────────────────────────────────────── */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 10.5px;
-        }
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 10.5px; }
         .data-table thead tr { background: #0f2d5e; }
         .data-table thead th {
-            color: #ffffff;
-            padding: 9px 12px;
-            text-align: left;
-            font-size: 9px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            font-weight: bold;
-            border: none;
+            color: #ffffff; padding: 9px 12px; text-align: left;
+            font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: bold; border: none;
         }
         .data-table thead th.right { text-align: right; }
         .data-table tbody tr { border-bottom: 1px solid #edf0f7; }
         .data-table tbody tr:nth-child(even) td { background: #f9fafc; }
-        .data-table tbody td {
-            padding: 8px 12px;
-            color: #1c2333;
-            border: none;
-            vertical-align: middle;
-        }
+        .data-table tbody td { padding: 8px 12px; color: #1c2333; border: none; vertical-align: middle; }
         .data-table tbody td.right { text-align: right; }
         .data-table tfoot td {
-            padding: 9px 12px;
-            font-weight: bold;
-            border-top: 2px solid #0f2d5e;
-            color: #0f2d5e;
-            background: #f0f4fc;
-            border-bottom: none;
+            padding: 9px 12px; font-weight: bold; border-top: 2px solid #0f2d5e;
+            color: #0f2d5e; background: #f0f4fc; border-bottom: none;
         }
         .data-table tfoot td.right { text-align: right; }
+        .empty-row td { text-align: center; color: #9aa5be; padding: 16px; font-style: italic; background: #f9fafc; }
 
-        .empty-row td {
-            text-align: center;
-            color: #9aa5be;
-            padding: 16px;
-            font-style: italic;
-            background: #f9fafc;
-        }
-
-        /* ── Share box ─────────────────────────────────────── */
-        .share-box {
-            background: #0f2d5e;
-            border-radius: 6px;
-            padding: 20px 22px;
-            margin-bottom: 24px;
-        }
-        .share-box-title {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #7fa8d4;
-            margin-bottom: 14px;
-            font-weight: bold;
-        }
+        .share-box { background: #0f2d5e; border-radius: 6px; padding: 20px 22px; margin-bottom: 24px; }
+        .share-box-title { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #7fa8d4; margin-bottom: 14px; font-weight: bold; }
         .share-row-table { width: 100%; }
-        .share-row-table td {
-            padding: 5px 0;
-            border: none;
-            background: none;
-        }
+        .share-row-table td { padding: 5px 0; border: none; background: none; }
         .share-row-label { color: #a8c8e8; font-size: 10.5px; }
-        .share-row-value {
-            text-align: right;
-            font-weight: bold;
-            color: #ffffff;
-            font-size: 11px;
-        }
-        .share-row-value.large {
-            font-size: 18px;
-            color: #e8a020;
-        }
-        .share-divider {
-            border-top: 1px solid rgba(255,255,255,0.12);
-            margin: 8px 0;
-        }
+        .share-row-value { text-align: right; font-weight: bold; color: #ffffff; font-size: 11px; }
+        .share-row-value.large { font-size: 18px; color: #e8a020; }
+        .share-row-value.gold { color: #e8a020; }
+        .share-divider { border-top: 1px solid rgba(255,255,255,0.12); margin: 8px 0; }
 
-        /* ── Loan banner ───────────────────────────────────── */
-        .loan-banner {
-            border-radius: 5px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 10.5px;
-            line-height: 1.6;
-        }
-        .loan-banner.warn {
-            background: #fff8e6;
-            border: 1px solid #f0d060;
-            border-left: 4px solid #e8a020;
-            color: #7a5800;
-        }
-        .loan-banner.ok {
-            background: #f0faf5;
-            border: 1px solid #b8dece;
-            border-left: 4px solid #1a7c5a;
-            color: #0a4a30;
-        }
+        .loan-banner { border-radius: 5px; padding: 12px 16px; margin-bottom: 20px; font-size: 10.5px; line-height: 1.6; }
+        .loan-banner.warn { background: #fff8e6; border: 1px solid #f0d060; border-left: 4px solid #e8a020; color: #7a5800; }
+        .loan-banner.ok { background: #f0faf5; border: 1px solid #b8dece; border-left: 4px solid #1a7c5a; color: #0a4a30; }
 
-        /* ── Badges ────────────────────────────────────────── */
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
         .badge-overdue { background: #fde8e7; color: #c0392b; }
         .badge-active  { background: #e6f5ee; color: #1a7c5a; }
         .badge-repaid  { background: #e8f4fd; color: #1a5a8a; }
 
-        /* ── Spacer ────────────────────────────────────────── */
         .spacer { height: 20px; }
 
-        /* ── Footer ────────────────────────────────────────── */
-        .footer-band {
-            background: #f4f7fc;
-            border-top: 3px solid #e8a020;
-            padding: 14px 36px;
-            margin-top: 32px;
-        }
+        .footer-band { background: #f4f7fc; border-top: 3px solid #e8a020; padding: 14px 36px; margin-top: 32px; }
         .footer-table { width: 100%; }
-        .footer-table td {
-            font-size: 9px;
-            color: #9aa5be;
-            padding: 0;
-            border: none;
-            background: none;
-        }
+        .footer-table td { font-size: 9px; color: #9aa5be; padding: 0; border: none; background: none; }
         .footer-table .footer-right { text-align: right; }
-        .confidential {
-            font-size: 8.5px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #c0392b;
-            font-weight: bold;
-        }
+        .confidential { font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #c0392b; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -350,10 +164,10 @@
                 </div>
             </td>
             <td class="kpi-cell">
-                <div class="kpi-card">
-                    <div class="kpi-label">Total Contributed</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($memberData['total_contributed_cycle'], 2) }}</div>
-                    <div class="kpi-sub">Cycle to date</div>
+                <div class="kpi-card {{ $memberData['total_interest_month'] > 0 ? 'gold' : 'green' }}">
+                    <div class="kpi-label">Interest Paid</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($memberData['total_interest_month'], 2) }}</div>
+                    <div class="kpi-sub">This month</div>
                 </div>
             </td>
             <td class="kpi-cell">
@@ -436,6 +250,40 @@
         @endif
     </table>
 
+    {{-- ══ INTEREST PAID ════════════════════════════════════════ --}}
+    <div class="section-title">Interest Paid This Month</div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Notes</th>
+                <th class="right">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($memberData['loan_interest'] as $i => $txn)
+            <tr>
+                <td style="color:#9aa5be;font-size:10px;">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</td>
+                <td>{{ $txn->transaction_date->format('d M Y') }}</td>
+                <td style="color:#6b7a99;">{{ $txn->notes ?? '—' }}</td>
+                <td class="right" style="font-weight:bold;color:#8a5a00;">M&nbsp;{{ number_format($txn->amount, 2) }}</td>
+            </tr>
+            @empty
+            <tr class="empty-row"><td colspan="4">No interest paid this month.</td></tr>
+            @endforelse
+        </tbody>
+        @if ($memberData['loan_interest']->isNotEmpty())
+        <tfoot>
+            <tr>
+                <td colspan="3">Total</td>
+                <td class="right">M&nbsp;{{ number_format($memberData['total_interest_month'], 2) }}</td>
+            </tr>
+        </tfoot>
+        @endif
+    </table>
+
     {{-- ══ LOANS ════════════════════════════════════════════════ --}}
     <div class="section-title">Loans This Cycle</div>
 
@@ -444,6 +292,7 @@
             <tr>
                 <th>Principal</th>
                 <th>Interest</th>
+                <th>Interest Paid</th>
                 <th>Total</th>
                 <th>Repaid</th>
                 <th class="right">Outstanding</th>
@@ -456,6 +305,7 @@
             <tr>
                 <td>M&nbsp;{{ number_format($loan->principal, 2) }}</td>
                 <td>M&nbsp;{{ number_format($loan->interest, 2) }}</td>
+                <td style="color:#8a5a00;">M&nbsp;{{ number_format($loan->interest_paid, 2) }}</td>
                 <td>M&nbsp;{{ number_format($loan->total_amount, 2) }}</td>
                 <td style="color:#1a7c5a;">M&nbsp;{{ number_format($loan->amount_repaid, 2) }}</td>
                 <td class="right" style="font-weight:bold;color:{{ $loan->outstanding_balance > 0 ? '#c0392b' : '#1a7c5a' }};">
@@ -475,7 +325,7 @@
                 </td>
             </tr>
             @empty
-            <tr class="empty-row"><td colspan="7">No loans recorded this cycle.</td></tr>
+            <tr class="empty-row"><td colspan="8">No loans recorded this cycle.</td></tr>
             @endforelse
         </tbody>
     </table>
@@ -489,6 +339,13 @@
             <tr>
                 <td class="share-row-label">Total Contributed (cycle to date)</td>
                 <td class="share-row-value">M&nbsp;{{ number_format($memberData['total_contributed_cycle'], 2) }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><div class="share-divider"></div></td>
+            </tr>
+            <tr>
+                <td class="share-row-label">Total Interest Paid (cycle to date)</td>
+                <td class="share-row-value gold">M&nbsp;{{ number_format($memberData['total_interest_cycle'], 2) }}</td>
             </tr>
             <tr>
                 <td colspan="2"><div class="share-divider"></div></td>

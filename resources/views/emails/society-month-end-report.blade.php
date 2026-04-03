@@ -15,10 +15,12 @@
         .stat-card  { background: #f0f4ff; border: 1px solid #c7d4f0; border-radius: 6px; padding: 14px 16px; }
         .stat-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .stat-value { font-size: 18px; font-weight: 700; color: #1a4480; }
-        .stat-card.warn  { background: #fff7ed; border-color: #fed7aa; }
+        .stat-card.warn    { background: #fff7ed; border-color: #fed7aa; }
         .stat-card.warn .stat-value { color: #b45309; }
         .stat-card.success { background: #f0fdf4; border-color: #bbf7d0; }
         .stat-card.success .stat-value { color: #0a7c59; }
+        .stat-card.gold    { background: #fffbeb; border-color: #fde68a; }
+        .stat-card.gold .stat-value { color: #92400e; }
         .note       { background: #f8faff; border-left: 4px solid #1a4480; padding: 12px 16px; font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 24px; border-radius: 0 4px 4px 0; }
         .footer     { background: #f4f6f9; padding: 20px 40px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; }
         .footer a   { color: #1a4480; text-decoration: none; }
@@ -61,6 +63,10 @@
                 <div class="stat-label">Outstanding Loans</div>
                 <div class="stat-value">M {{ number_format($summary['total_outstanding'], 2) }}</div>
             </div>
+            <div class="stat-card gold">
+                <div class="stat-label">Interest Collected</div>
+                <div class="stat-value">M {{ number_format($summary['total_interest_collected'], 2) }}</div>
+            </div>
             <div class="stat-card">
                 <div class="stat-label">Active Loans</div>
                 <div class="stat-value">{{ $summary['active_loans_count'] }}</div>
@@ -68,6 +74,10 @@
             <div class="stat-card {{ $summary['defaulters_count'] > 0 ? 'warn' : 'success' }}">
                 <div class="stat-label">Defaulters This Month</div>
                 <div class="stat-value">{{ $summary['defaulters_count'] }}</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-label">Pool Balance (Cycle)</div>
+                <div class="stat-value">M {{ number_format($summary['pool_balance'], 2) }}</div>
             </div>
         </div>
 

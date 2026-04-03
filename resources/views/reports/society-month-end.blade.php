@@ -13,258 +13,84 @@
             line-height: 1.5;
         }
 
-        /* ── Header band ───────────────────────────────────── */
-        .header {
-            background: #0f2d5e;
-            padding: 0;
-            margin-bottom: 0;
-        }
-        .header-inner {
-            padding: 28px 36px 24px;
-        }
-        .header-accent {
-            height: 5px;
-            background: #e8a020;
-            /* Gold accent stripe */
-        }
-        .org-label {
-            font-size: 9px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: #7fa8d4;
-            margin-bottom: 6px;
-        }
-        .org-name {
-            font-size: 22px;
-            font-weight: bold;
-            color: #ffffff;
-            letter-spacing: -0.3px;
-            margin-bottom: 3px;
-        }
-        .report-title {
-            font-size: 12px;
-            color: #a8c8e8;
-            letter-spacing: 0.5px;
-        }
-        .header-meta {
-            margin-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.12);
-            padding-top: 14px;
-        }
+        .header { background: #0f2d5e; padding: 0; margin-bottom: 0; }
+        .header-inner { padding: 28px 36px 24px; }
+        .header-accent { height: 5px; background: #e8a020; }
+        .org-label { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: #7fa8d4; margin-bottom: 6px; }
+        .org-name { font-size: 22px; font-weight: bold; color: #ffffff; letter-spacing: -0.3px; margin-bottom: 3px; }
+        .report-title { font-size: 12px; color: #a8c8e8; letter-spacing: 0.5px; }
+        .header-meta { margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 14px; }
         .header-meta table { width: 100%; }
-        .header-meta td {
-            color: #7fa8d4;
-            font-size: 10px;
-            padding: 0;
-            border: none;
-            background: none;
-        }
-        .header-meta .meta-value {
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 11px;
-        }
+        .header-meta td { color: #7fa8d4; font-size: 10px; padding: 0; border: none; background: none; }
+        .header-meta .meta-value { color: #ffffff; font-weight: bold; font-size: 11px; }
 
-        /* ── Page body ─────────────────────────────────────── */
-        .page-body {
-            padding: 28px 36px;
-        }
+        .page-body { padding: 28px 36px; }
 
-        /* ── Section title ─────────────────────────────────── */
         .section-title {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #0f2d5e;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #e8a020;
+            font-size: 9px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
+            color: #0f2d5e; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #e8a020;
         }
 
-        /* ── KPI grid (4 cards per row using table) ────────── */
-        .kpi-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 8px;
-            margin-bottom: 24px;
-            margin-left: -8px;
-            margin-right: -8px;
-        }
-        .kpi-cell {
-            width: 25%;
-            vertical-align: top;
-        }
-        .kpi-card {
-            background: #f4f7fc;
-            border: 1px solid #dde5f0;
-            border-radius: 5px;
-            padding: 12px 14px;
-            border-left: 3px solid #0f2d5e;
-        }
+        .kpi-table { width: 100%; border-collapse: separate; border-spacing: 8px; margin-bottom: 24px; margin-left: -8px; margin-right: -8px; }
+        .kpi-cell { width: 25%; vertical-align: top; }
+        .kpi-card { background: #f4f7fc; border: 1px solid #dde5f0; border-radius: 5px; padding: 12px 14px; border-left: 3px solid #0f2d5e; }
         .kpi-card.gold   { border-left-color: #e8a020; background: #fffbf0; border-color: #f0d890; }
         .kpi-card.green  { border-left-color: #1a7c5a; background: #f0faf5; border-color: #b8dece; }
         .kpi-card.red    { border-left-color: #c0392b; background: #fdf4f3; border-color: #f0c8c5; }
-        .kpi-label {
-            font-size: 8.5px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: #6b7a99;
-            margin-bottom: 5px;
-        }
-        .kpi-value {
-            font-size: 17px;
-            font-weight: bold;
-            color: #0f2d5e;
-            line-height: 1;
-        }
+        .kpi-label { font-size: 8.5px; letter-spacing: 0.8px; text-transform: uppercase; color: #6b7a99; margin-bottom: 5px; }
+        .kpi-value { font-size: 17px; font-weight: bold; color: #0f2d5e; line-height: 1; }
         .kpi-card.gold  .kpi-value { color: #8a5a00; }
         .kpi-card.green .kpi-value { color: #1a7c5a; }
         .kpi-card.red   .kpi-value { color: #c0392b; }
-        .kpi-sub {
-            font-size: 8px;
-            color: #9aa5be;
-            margin-top: 3px;
-        }
+        .kpi-sub { font-size: 8px; color: #9aa5be; margin-top: 3px; }
 
-        /* ── Summary rows ──────────────────────────────────── */
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            border: 1px solid #dde5f0;
-            border-radius: 5px;
-        }
-        .summary-table tr { border-bottom: 1px solid #edf0f7; }
-        .summary-table tr:last-child { border-bottom: none; }
-        .summary-table td {
-            padding: 9px 14px;
-            font-size: 11px;
-            border: none;
-        }
-        .summary-table tr:nth-child(even) td { background: #f9fafc; }
-        .s-label { color: #6b7a99; }
-        .s-value { font-weight: bold; color: #1c2333; text-align: right; }
-        .s-value.positive { color: #1a7c5a; }
-        .s-value.negative { color: #c0392b; }
-        .s-value.neutral  { color: #0f2d5e; }
-
-        /* ── Data table ────────────────────────────────────── */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 10.5px;
-        }
-        .data-table thead tr {
-            background: #0f2d5e;
-        }
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 10.5px; }
+        .data-table thead tr { background: #0f2d5e; }
         .data-table thead th {
-            color: #ffffff;
-            padding: 9px 12px;
-            text-align: left;
-            font-size: 9px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            font-weight: bold;
-            border: none;
+            color: #ffffff; padding: 9px 12px; text-align: left;
+            font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: bold; border: none;
         }
         .data-table thead th:last-child { text-align: right; }
         .data-table tbody tr { border-bottom: 1px solid #edf0f7; }
         .data-table tbody tr:nth-child(even) td { background: #f9fafc; }
-        .data-table tbody td {
-            padding: 8px 12px;
-            color: #1c2333;
-            border: none;
-            vertical-align: middle;
-        }
+        .data-table tbody td { padding: 8px 12px; color: #1c2333; border: none; vertical-align: middle; }
         .data-table tbody td:last-child { text-align: right; }
         .data-table tfoot td {
-            padding: 9px 12px;
-            font-weight: bold;
-            border-top: 2px solid #0f2d5e;
-            color: #0f2d5e;
-            background: #f0f4fc;
-            border-bottom: none;
+            padding: 9px 12px; font-weight: bold; border-top: 2px solid #0f2d5e;
+            color: #0f2d5e; background: #f0f4fc; border-bottom: none;
         }
         .data-table tfoot td:last-child { text-align: right; }
 
-        /* ── Status badges ─────────────────────────────────── */
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
         .badge-overdue  { background: #fde8e7; color: #c0392b; }
         .badge-active   { background: #e6f5ee; color: #1a7c5a; }
         .badge-none     { background: #edf0f7; color: #6b7a99; }
         .badge-repaid   { background: #e8f4fd; color: #1a5a8a; }
 
-        /* ── Divider ───────────────────────────────────────── */
-        .divider {
-            border: none;
-            border-top: 1px solid #edf0f7;
-            margin: 20px 0;
-        }
-
-        /* ── Spacer ────────────────────────────────────────── */
         .spacer { height: 20px; }
 
-        /* ── Footer ────────────────────────────────────────── */
-        .footer-band {
-            background: #f4f7fc;
-            border-top: 3px solid #e8a020;
-            padding: 14px 36px;
-            margin-top: 32px;
-        }
-        .footer-table { width: 100%; }
-        .footer-table td {
-            font-size: 9px;
-            color: #9aa5be;
-            padding: 0;
-            border: none;
-            background: none;
-        }
-        .footer-table .footer-right { text-align: right; }
-        .confidential {
-            font-size: 8.5px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #c0392b;
-            font-weight: bold;
-        }
-
-        /* ── Watermark-style page label ────────────────────── */
-        .page-label {
-            font-size: 8px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #b0b8cc;
-            text-align: right;
-            margin-bottom: 18px;
-        }
-
-        /* ── Alert box ─────────────────────────────────────── */
         .alert-box {
-            background: #fff8e6;
-            border: 1px solid #f0d060;
-            border-left: 4px solid #e8a020;
-            border-radius: 4px;
-            padding: 10px 14px;
-            margin-bottom: 20px;
-            font-size: 10.5px;
-            color: #7a5800;
+            background: #fff8e6; border: 1px solid #f0d060; border-left: 4px solid #e8a020;
+            border-radius: 4px; padding: 10px 14px; margin-bottom: 20px; font-size: 10.5px; color: #7a5800;
         }
-        .alert-box.info {
-            background: #eef4fd;
-            border-color: #b8cef0;
-            border-left-color: #0f2d5e;
-            color: #1c2333;
+
+        .page-label { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: #b0b8cc; text-align: right; margin-bottom: 18px; }
+
+        .footer-band { background: #f4f7fc; border-top: 3px solid #e8a020; padding: 14px 36px; margin-top: 32px; }
+        .footer-table { width: 100%; }
+        .footer-table td { font-size: 9px; color: #9aa5be; padding: 0; border: none; background: none; }
+        .footer-table .footer-right { text-align: right; }
+        .confidential { font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #c0392b; font-weight: bold; }
+
+        .summary-strip {
+            background: #0f2d5e; border-radius: 6px; padding: 16px 20px; margin-bottom: 24px;
         }
+        .summary-strip table { width: 100%; }
+        .summary-strip td { padding: 5px 12px; border: none; background: none; }
+        .summary-strip .s-label { color: #7fa8d4; font-size: 9.5px; }
+        .summary-strip .s-value { color: #ffffff; font-weight: bold; font-size: 13px; text-align: right; }
+        .summary-strip .s-value.gold { color: #e8a020; }
+        .summary-strip .s-value.green { color: #4ade80; }
     </style>
 </head>
 <body>
@@ -315,7 +141,7 @@
     </div>
     @endif
 
-    {{-- ══ KPI CARDS ════════════════════════════════════════════ --}}
+    {{-- ══ KPI CARDS — THIS MONTH ═══════════════════════════════ --}}
     <div class="section-title">Monthly Snapshot</div>
 
     <table class="kpi-table">
@@ -354,6 +180,13 @@
     <table class="kpi-table">
         <tr>
             <td class="kpi-cell">
+                <div class="kpi-card gold">
+                    <div class="kpi-label">Interest Collected</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_interest_collected'], 2) }}</div>
+                    <div class="kpi-sub">This month</div>
+                </div>
+            </td>
+            <td class="kpi-cell">
                 <div class="kpi-card">
                     <div class="kpi-label">Pool Balance</div>
                     <div class="kpi-value">M&nbsp;{{ number_format($summary['pool_balance'], 2) }}</div>
@@ -374,15 +207,28 @@
                     <div class="kpi-sub">{{ $summary['active_loans_count'] }} active loan(s)</div>
                 </div>
             </td>
-            <td class="kpi-cell">
-                <div class="kpi-card {{ $summary['defaulters_count'] > 0 ? 'gold' : 'green' }}">
-                    <div class="kpi-label">Defaulters</div>
-                    <div class="kpi-value">{{ $summary['defaulters_count'] }}</div>
-                    <div class="kpi-sub">of {{ $summary['total_members'] }} members</div>
-                </div>
-            </td>
         </tr>
     </table>
+
+    {{-- ══ CYCLE-TO-DATE SUMMARY STRIP ══════════════════════════ --}}
+    <div class="section-title">Cycle-to-Date Income Summary</div>
+
+    <div class="summary-strip">
+        <table>
+            <tr>
+                <td class="s-label">Total Contributions</td>
+                <td class="s-value">M&nbsp;{{ number_format($summary['pool_balance'] + $summary['total_outstanding'], 2) }}</td>
+                <td class="s-label">Interest Collected (Cycle)</td>
+                <td class="s-value gold">M&nbsp;{{ number_format($summary['cycle_interest_collected'], 2) }}</td>
+            </tr>
+            <tr>
+                <td class="s-label">Penalties Collected (Cycle)</td>
+                <td class="s-value gold">M&nbsp;{{ number_format($summary['cycle_penalties'], 2) }}</td>
+                <td class="s-label">Available Balance</td>
+                <td class="s-value green">M&nbsp;{{ number_format($summary['available_balance'], 2) }}</td>
+            </tr>
+        </table>
+    </div>
 
     <div class="spacer"></div>
 
@@ -396,8 +242,9 @@
                 <th>Member Name</th>
                 <th>Contributed</th>
                 <th>Penalties</th>
+                <th>Interest Paid</th>
                 <th>Loan Status</th>
-                <th>Outstanding Balance</th>
+                <th>Outstanding</th>
             </tr>
         </thead>
         <tbody>
@@ -410,6 +257,9 @@
                 </td>
                 <td style="color:{{ $row['penalties'] > 0 ? '#c0392b' : '#6b7a99' }};">
                     M&nbsp;{{ number_format($row['penalties'], 2) }}
+                </td>
+                <td style="color:{{ $row['interest_paid'] > 0 ? '#8a5a00' : '#6b7a99' }};">
+                    M&nbsp;{{ number_format($row['interest_paid'], 2) }}
                 </td>
                 <td>
                     @if ($row['loan_status'] === 'overdue')
@@ -431,6 +281,7 @@
                 <td colspan="2">Totals</td>
                 <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('contributed'), 2) }}</td>
                 <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('penalties'), 2) }}</td>
+                <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('interest_paid'), 2) }}</td>
                 <td></td>
                 <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('outstanding_balance'), 2) }}</td>
             </tr>
@@ -447,7 +298,7 @@
                 <th>Member</th>
                 <th>Principal</th>
                 <th>Interest</th>
-                <th>Total</th>
+                <th>Interest Paid</th>
                 <th>Repaid</th>
                 <th>Outstanding</th>
                 <th>Due Date</th>
@@ -460,7 +311,7 @@
                 <td style="font-weight:600;">{{ $loan->member->user->name }}</td>
                 <td>M&nbsp;{{ number_format($loan->principal, 2) }}</td>
                 <td>M&nbsp;{{ number_format($loan->interest, 2) }}</td>
-                <td>M&nbsp;{{ number_format($loan->total_amount, 2) }}</td>
+                <td style="color:#8a5a00;">M&nbsp;{{ number_format($loan->interest_paid, 2) }}</td>
                 <td style="color:#1a7c5a;">M&nbsp;{{ number_format($loan->amount_repaid, 2) }}</td>
                 <td style="font-weight:bold;color:#c0392b;">M&nbsp;{{ number_format($loan->outstanding_balance, 2) }}</td>
                 <td style="color:{{ $loan->isDue() ? '#c0392b' : '#1c2333' }};">
@@ -478,7 +329,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4">Total Outstanding</td>
+                <td colspan="2">Totals</td>
+                <td></td>
+                <td>M&nbsp;{{ number_format($summary['active_loans']->sum('interest_paid'), 2) }}</td>
                 <td>M&nbsp;{{ number_format($summary['active_loans']->sum('amount_repaid'), 2) }}</td>
                 <td>M&nbsp;{{ number_format($summary['total_outstanding'], 2) }}</td>
                 <td colspan="2"></td>

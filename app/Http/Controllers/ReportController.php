@@ -33,6 +33,7 @@ class ReportController extends Controller
         $outstandingBalance = $cycle->loans()->where('status', '!=', 'repaid')->sum('outstanding_balance');
         $totalInterest = $cycle->loans()->sum('interest');
         $availableFund = $totalContributions + $totalRepayments - $totalLoansIssued;
+        $totalInterestCollected = $cycle->transactions()->where('type', 'loan_interest')->sum('amount');
 
         $stats = [
             'total_contributions' => $totalContributions,
@@ -40,7 +41,9 @@ class ReportController extends Controller
             'total_repayments' => $totalRepayments,
             'outstanding_balance' => $outstandingBalance,
             'total_interest' => $totalInterest,
+            'total_interest_collected'=> $totalInterestCollected,                 // actual collected
             'available_fund' => $availableFund,
+            
         ];
 
         return view('societies.reports.summary', compact('society', 'cycle', 'stats'));

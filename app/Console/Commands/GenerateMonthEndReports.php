@@ -20,8 +20,6 @@ class GenerateMonthEndReports extends Command
 
     public function handle(): void
     {
-        // Default to PREVIOUS month so when it runs on the 1st
-        // it always reports on the month just ended
         $previousMonth = now()->subMonth();
 
         $month  = (int) ($this->option('month') ?: $previousMonth->month);
@@ -45,10 +43,8 @@ class GenerateMonthEndReports extends Command
 
                 $summary = $this->buildSocietySummary($society, $cycle, $month, $year);
 
-                // ── Society-wide report ───────────────────────────────
                 $this->generateSocietyReport($society, $cycle, $summary, $period);
 
-                // ── Individual member statements ──────────────────────
                 $society->members()
                     ->where('status', 'active')
                     ->with('user')
@@ -88,15 +84,18 @@ class GenerateMonthEndReports extends Command
         };
 
         // ── This month ────────────────────────────────────────────
-        $totalContributions = $base('contribution');
-        $totalPenalties     = $base('penalty');
-        $totalDisbursed     = $base('loan_disbursement');
-        $totalRepayments    = $base('loan_repayment');
+        $totalContributions     = $base('contribution');
+        $totalPenalties         = $base('penalty');
+        $totalDisbursed         = $base('loan_disbursement');
+        $totalRepayments        = $base('loan_repayment');
+        $totalInterestCollected = $base('loan_interest');
 
         // ── Cycle-to-date ─────────────────────────────────────────
-        $cycleContributions = $cycleTotal('contribution');
-        $cycleDisbursed     = $cycleTotal('loan_disbursement');
-        $cycleRepayments    = $cycleTotal('loan_repayment');
+        $cycleContributions     = $cycleTotal('contribution');
+        $cycleDisbursed         = $cycleTotal('loan_disbursement');
+        $cycleRepayments        = $cycleTotal('loan_repayment');
+        $cycleInterestCollected = $cycleTotal('loan_interest');
+        $cyclePenalties         = $cycleTotal('penalty');
 
         // ── Active loans ──────────────────────────────────────────
         $activeLoans = Loan::where('society_id', $society->id)
@@ -128,6 +127,14 @@ class GenerateMonthEndReports extends Command
                     ->whereYear('transaction_date', $year)
                     ->sum('amount');
 
+                $interestPaid = Transaction::where('society_id', $society->id)
+                    ->where('cycle_id', $cycle->id)
+                    ->where('member_id', $member->id)
+                    ->where('type', 'loan_interest')
+                    ->whereMonth('transaction_date', $month)
+                    ->whereYear('transaction_date', $year)
+                    ->sum('amount');
+
                 $activeLoan = Loan::where('society_id', $society->id)
                     ->where('cycle_id', $cycle->id)
                     ->where('member_id', $member->id)
@@ -138,6 +145,7 @@ class GenerateMonthEndReports extends Command
                     'member'              => $member,
                     'contributed'         => (float) $contributed,
                     'penalties'           => (float) $penalties,
+                    'interest_paid'       => (float) $interestPaid,
                     'has_active_loan'     => (bool) $activeLoan,
                     'outstanding_balance' => (float) ($activeLoan?->outstanding_balance ?? 0),
                     'loan_status'         => $activeLoan?->status ?? 'none',
@@ -146,24 +154,27 @@ class GenerateMonthEndReports extends Command
 
         return [
             // Period
-            'month'               => $month,
-            'year'                => $year,
+            'month'                   => $month,
+            'year'                    => $year,
             // This month
-            'total_contributions' => (float) $totalContributions,
-            'total_penalties'     => (float) $totalPenalties,
-            'total_disbursed'     => (float) $totalDisbursed,
-            'total_repayments'    => (float) $totalRepayments,
+            'total_contributions'     => (float) $totalContributions,
+            'total_penalties'         => (float) $totalPenalties,
+            'total_disbursed'         => (float) $totalDisbursed,
+            'total_repayments'        => (float) $totalRepayments,
+            'total_interest_collected'=> (float) $totalInterestCollected,
             // Cycle-wide pool
-            'pool_balance'        => round($cycleContributions + $cycleRepayments - $cycleDisbursed, 2),
-            'available_balance'   => $society->availableBalance($cycle->id),
+            'cycle_interest_collected'=> (float) $cycleInterestCollected,
+            'cycle_penalties'         => (float) $cyclePenalties,
+            'pool_balance'            => round($cycleContributions + $cycleRepayments + $cycleInterestCollected - $cycleDisbursed, 2),
+            'available_balance'       => $society->availableBalance($cycle->id),
             // Loans
-            'active_loans'        => $activeLoans,
-            'active_loans_count'  => $activeLoans->count(),
-            'total_outstanding'   => (float) $activeLoans->sum('outstanding_balance'),
+            'active_loans'            => $activeLoans,
+            'active_loans_count'      => $activeLoans->count(),
+            'total_outstanding'       => (float) $activeLoans->sum('outstanding_balance'),
             // Members
-            'member_breakdown'    => $memberBreakdown,
-            'total_members'       => $memberBreakdown->count(),
-            'defaulters_count'    => $memberBreakdown->where('contributed', 0)->count(),
+            'member_breakdown'        => $memberBreakdown,
+            'total_members'           => $memberBreakdown->count(),
+            'defaulters_count'        => $memberBreakdown->where('contributed', 0)->count(),
         ];
     }
 
@@ -183,12 +194,12 @@ class GenerateMonthEndReports extends Command
             'period'  => $period,
         ])->setPaper('a4', 'portrait');
 
-        $filename = "{$society->id}-society-report-{$period->format('Y-m')}.pdf";
+        $filename  = "{$society->id}-society-report-{$period->format('Y-m')}.pdf";
         $pdfOutput = $pdf->output();
 
         $officers = $society->members()
             ->with('user')
-            ->whereIn('role', ['chairman', 'treasurer'])
+            ->whereIn('role', ['chairman', 'treasurer', 'member'])
             ->get();
 
         if ($officers->isEmpty()) {
@@ -201,7 +212,7 @@ class GenerateMonthEndReports extends Command
                 ->send(new SocietyMonthEndReport(
                     society:    $society,
                     period:     $period,
-                    summary:    $summary,       // ← fix: pass summary to mailable
+                    summary:    $summary,
                     pdfContent: $pdfOutput,
                     filename:   $filename,
                 ));
@@ -240,6 +251,15 @@ class GenerateMonthEndReports extends Command
             ->orderBy('transaction_date')
             ->get();
 
+        $loanInterest = Transaction::where('society_id', $society->id)
+            ->where('cycle_id', $cycle->id)
+            ->where('member_id', $member->id)
+            ->where('type', 'loan_interest')
+            ->whereMonth('transaction_date', $month)
+            ->whereYear('transaction_date', $year)
+            ->orderBy('transaction_date')
+            ->get();
+
         $loans = Loan::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
@@ -250,6 +270,12 @@ class GenerateMonthEndReports extends Command
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
             ->where('type', 'contribution')
+            ->sum('amount');
+
+        $totalCycleInterest = Transaction::where('society_id', $society->id)
+            ->where('cycle_id', $cycle->id)
+            ->where('member_id', $member->id)
+            ->where('type', 'loan_interest')
             ->sum('amount');
 
         // Share % based on cycle pool
@@ -265,10 +291,13 @@ class GenerateMonthEndReports extends Command
         $memberData = [
             'contributions'           => $contributions,
             'penalties'               => $penalties,
+            'loan_interest'           => $loanInterest,
             'loans'                   => $loans,
             'total_contributed_month' => (float) $contributions->sum('amount'),
             'total_penalties_month'   => (float) $penalties->sum('amount'),
+            'total_interest_month'    => (float) $loanInterest->sum('amount'),
             'total_contributed_cycle' => (float) $totalCycleContributions,
+            'total_interest_cycle'    => (float) $totalCycleInterest,
             'share_percent'           => $sharePercent,
             'share_value'             => round($summary['pool_balance'] * ($sharePercent / 100), 2),
             'active_loan'             => $loans->whereIn('status', ['active', 'overdue'])->first(),
@@ -290,7 +319,7 @@ class GenerateMonthEndReports extends Command
                 society:    $society,
                 member:     $member,
                 period:     $period,
-                memberData: $memberData,    // ← fix: pass memberData to mailable
+                memberData: $memberData,
                 pdfContent: $pdfOutput,
                 filename:   $filename,
             ));

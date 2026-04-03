@@ -19,6 +19,8 @@
         .stat-card.warn .stat-value { color: #b45309; }
         .stat-card.success { background: #f0fdf4; border-color: #bbf7d0; }
         .stat-card.success .stat-value { color: #0a7c59; }
+        .stat-card.gold    { background: #fffbeb; border-color: #fde68a; }
+        .stat-card.gold .stat-value { color: #92400e; }
         .loan-banner        { border-radius: 6px; padding: 14px 18px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; }
         .loan-banner.active { background: #fff7ed; border: 1px solid #fed7aa; color: #92400e; }
         .loan-banner.clear  { background: #f0fdf4; border: 1px solid #bbf7d0; color: #065f46; }
@@ -58,6 +60,10 @@
                 <div class="stat-label">Penalties This Month</div>
                 <div class="stat-value">M {{ number_format($memberData['total_penalties_month'], 2) }}</div>
             </div>
+            <div class="stat-card {{ $memberData['total_interest_month'] > 0 ? 'gold' : 'success' }}">
+                <div class="stat-label">Interest Paid This Month</div>
+                <div class="stat-value">M {{ number_format($memberData['total_interest_month'], 2) }}</div>
+            </div>
             <div class="stat-card">
                 <div class="stat-label">Total Contributed (Cycle)</div>
                 <div class="stat-value">M {{ number_format($memberData['total_contributed_cycle'], 2) }}</div>
@@ -65,6 +71,10 @@
             <div class="stat-card success">
                 <div class="stat-label">Your Pool Share</div>
                 <div class="stat-value">{{ $memberData['share_percent'] }}%</div>
+            </div>
+            <div class="stat-card gold">
+                <div class="stat-label">Total Interest Paid (Cycle)</div>
+                <div class="stat-value">M {{ number_format($memberData['total_interest_cycle'], 2) }}</div>
             </div>
         </div>
 
@@ -90,6 +100,10 @@
             <div class="row">
                 <span>Total Contributed (cycle to date)</span>
                 <span>M {{ number_format($memberData['total_contributed_cycle'], 2) }}</span>
+            </div>
+            <div class="row">
+                <span>Total Interest Paid (cycle to date)</span>
+                <span>M {{ number_format($memberData['total_interest_cycle'], 2) }}</span>
             </div>
             <div class="row">
                 <span>Your Share of Pool</span>
