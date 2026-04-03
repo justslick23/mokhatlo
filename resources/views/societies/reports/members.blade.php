@@ -17,7 +17,7 @@
                 </ol>
             </nav>
             <h2 class="mb-1">Member Financial Overview</h2>
-            <p class="text-muted mb-0">Comprehensive view of member contributions and loans</p>
+            <p class="text-muted mb-0">Comprehensive view of member contributions, loans and interest</p>
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary" onclick="window.print()">
@@ -122,12 +122,12 @@
                         <thead class="bg-light">
                             <tr>
                                 <th class="px-4 py-3 text-muted small text-uppercase">Member</th>
-                                <th class="py-3 text-muted small text-uppercase text-end">Total Contributions</th>
+                                <th class="py-3 text-muted small text-uppercase text-end">Contributions</th>
+                                <th class="py-3 text-muted small text-uppercase text-end">Interest Paid</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Active Loans</th>
-                                <th class="py-3 text-muted small text-uppercase text-end">Outstanding Balance</th>
+                                <th class="py-3 text-muted small text-uppercase text-end">Outstanding</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Net Position</th>
                                 <th class="py-3 text-muted small text-uppercase">Status</th>
-                                <th class="px-4 py-3 text-muted small text-uppercase text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,17 +137,22 @@
                                     ->where('member_id', $member->id)
                                     ->where('type', 'contribution')
                                     ->sum('amount');
-                                    
+
+                                $totalInterestPaid = $society->transactions()
+                                    ->where('member_id', $member->id)
+                                    ->where('type', 'loan_interest')
+                                    ->sum('amount');
+
                                 $activeLoans = $society->loans()
                                     ->where('member_id', $member->id)
                                     ->where('status', '!=', 'repaid')
                                     ->count();
-                                    
+
                                 $outstandingBalance = $society->loans()
                                     ->where('member_id', $member->id)
                                     ->where('status', '!=', 'repaid')
                                     ->sum('outstanding_balance');
-                                    
+
                                 $netPosition = $totalContributions - $outstandingBalance;
                             @endphp
                             <tr class="member-row">
@@ -164,6 +169,11 @@
                                 </td>
                                 <td class="py-3 text-end">
                                     <span class="fw-semibold text-success">M {{ number_format($totalContributions, 2) }}</span>
+                                </td>
+                                <td class="py-3 text-end">
+                                    <span class="fw-semibold {{ $totalInterestPaid > 0 ? 'text-warning' : 'text-muted' }}">
+                                        M {{ number_format($totalInterestPaid, 2) }}
+                                    </span>
                                 </td>
                                 <td class="py-3 text-end">
                                     <span class="badge bg-light text-dark">{{ $activeLoans }}</span>
@@ -187,12 +197,6 @@
                                         </span>
                                     @endif
                                 </td>
-                             {{--    <td class="px-4 py-3 text-end">
-                                    <a href="{{ route('societies.members.show', [$society, $member]) }}" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-chart-bar me-1"></i>Details
-                                    </a>
-                                </td> --}}
                             </tr>
                             @endforeach
                         </tbody>
@@ -204,102 +208,21 @@
 </div>
 
 <style>
-/* Icon Boxes */
-.icon-box {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.bg-gradient-success {
-    background: linear-gradient(135deg, #1dd1a1 0%, #10ac84 100%);
-}
-
-.bg-gradient-danger {
-    background: linear-gradient(135deg, #f76b8a 0%, #ee5a6f 100%);
-}
-
-/* Avatar Circle */
-.avatar-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-/* Custom Badges */
-.badge-success-custom {
-    background-color: rgba(29, 209, 161, 0.1);
-    color: #1dd1a1;
-    font-weight: 600;
-    padding: 0.375rem 0.75rem;
-}
-
-.badge-secondary-custom {
-    background-color: rgba(108, 117, 125, 0.1);
-    color: #6c757d;
-    font-weight: 600;
-    padding: 0.375rem 0.75rem;
-}
-
-/* Table Hover Effect */
-.member-row {
-    transition: background-color 0.2s ease;
-}
-
-.member-row:hover {
-    background-color: rgba(102, 126, 234, 0.03);
-}
-
-/* Card Hover */
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
-
-/* Breadcrumb Styling */
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin: 0;
-}
-
-.breadcrumb-item a {
-    color: #667eea;
-    text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-    text-decoration: underline;
-}
-
-/* Print Styles */
+.icon-box { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bg-gradient-success { background: linear-gradient(135deg, #1dd1a1 0%, #10ac84 100%); }
+.bg-gradient-danger  { background: linear-gradient(135deg, #f76b8a 0%, #ee5a6f 100%); }
+.avatar-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
+.badge-success-custom  { background-color: rgba(29, 209, 161, 0.1); color: #1dd1a1; font-weight: 600; padding: 0.375rem 0.75rem; }
+.badge-secondary-custom { background-color: rgba(108, 117, 125, 0.1); color: #6c757d; font-weight: 600; padding: 0.375rem 0.75rem; }
+.member-row { transition: background-color 0.2s ease; }
+.member-row:hover { background-color: rgba(102, 126, 234, 0.03); }
+.breadcrumb { background: transparent; padding: 0; margin: 0; }
+.breadcrumb-item a { color: #667eea; text-decoration: none; }
+.breadcrumb-item a:hover { text-decoration: underline; }
 @media print {
-    .btn, .breadcrumb, .form-control, .form-select {
-        display: none !important;
-    }
-    
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
-    }
+    .btn, .breadcrumb, .form-control, .form-select { display: none !important; }
+    .card { box-shadow: none !important; border: 1px solid #dee2e6 !important; }
 }
 </style>
 @endsection

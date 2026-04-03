@@ -154,27 +154,28 @@ class GenerateMonthEndReports extends Command
 
         return [
             // Period
-            'month'                   => $month,
-            'year'                    => $year,
+            'month'                    => $month,
+            'year'                     => $year,
             // This month
-            'total_contributions'     => (float) $totalContributions,
-            'total_penalties'         => (float) $totalPenalties,
-            'total_disbursed'         => (float) $totalDisbursed,
-            'total_repayments'        => (float) $totalRepayments,
-            'total_interest_collected'=> (float) $totalInterestCollected,
+            'total_contributions'      => (float) $totalContributions,
+            'total_penalties'          => (float) $totalPenalties,
+            'total_disbursed'          => (float) $totalDisbursed,
+            'total_repayments'         => (float) $totalRepayments,
+            'total_interest_collected' => (float) $totalInterestCollected,
             // Cycle-wide pool
-            'cycle_interest_collected'=> (float) $cycleInterestCollected,
-            'cycle_penalties'         => (float) $cyclePenalties,
-            'pool_balance'            => round($cycleContributions + $cycleRepayments + $cycleInterestCollected - $cycleDisbursed, 2),
-            'available_balance'       => $society->availableBalance($cycle->id),
+            'cycle_contributions'      => (float) $cycleContributions,      // ← needed for share calc
+            'cycle_interest_collected' => (float) $cycleInterestCollected,
+            'cycle_penalties'          => (float) $cyclePenalties,
+            'pool_balance'             => round($cycleContributions + $cycleRepayments - $cycleDisbursed, 2),
+            'available_balance'        => $society->availableBalance($cycle->id),
             // Loans
-            'active_loans'            => $activeLoans,
-            'active_loans_count'      => $activeLoans->count(),
-            'total_outstanding'       => (float) $activeLoans->sum('outstanding_balance'),
+            'active_loans'             => $activeLoans,
+            'active_loans_count'       => $activeLoans->count(),
+            'total_outstanding'        => (float) $activeLoans->sum('outstanding_balance'),
             // Members
-            'member_breakdown'        => $memberBreakdown,
-            'total_members'           => $memberBreakdown->count(),
-            'defaulters_count'        => $memberBreakdown->where('contributed', 0)->count(),
+            'member_breakdown'         => $memberBreakdown,
+            'total_members'            => $memberBreakdown->count(),
+            'defaulters_count'         => $memberBreakdown->where('contributed', 0)->count(),
         ];
     }
 
@@ -241,7 +242,7 @@ class GenerateMonthEndReports extends Command
             ->whereYear('transaction_date', $year)
             ->orderBy('transaction_date')
             ->get();
-
+    
         $penalties = Transaction::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
@@ -250,7 +251,7 @@ class GenerateMonthEndReports extends Command
             ->whereYear('transaction_date', $year)
             ->orderBy('transaction_date')
             ->get();
-
+    
         $loanInterest = Transaction::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
@@ -259,35 +260,58 @@ class GenerateMonthEndReports extends Command
             ->whereYear('transaction_date', $year)
             ->orderBy('transaction_date')
             ->get();
-
+    
         $loans = Loan::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
             ->orderBy('issue_date')
             ->get();
-
+    
+        // ── Cycle-to-date totals for this member ──────────────────
         $totalCycleContributions = Transaction::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
             ->where('type', 'contribution')
             ->sum('amount');
-
+    
         $totalCycleInterest = Transaction::where('society_id', $society->id)
             ->where('cycle_id', $cycle->id)
             ->where('member_id', $member->id)
             ->where('type', 'loan_interest')
             ->sum('amount');
-
-        // Share % based on cycle pool
-        $cyclePoolTotal = Transaction::where('society_id', $society->id)
-            ->where('cycle_id', $cycle->id)
-            ->where('type', 'contribution')
-            ->sum('amount');
-
-        $sharePercent = $cyclePoolTotal > 0
-            ? round(($totalCycleContributions / $cyclePoolTotal) * 100, 2)
+    
+        // ── Share calculation ─────────────────────────────────────
+        //
+        // Interest paid  → belongs back to the borrower (their own stake)
+        // Penalties paid → belong to the pool, shared by ALL members
+        //                  proportional to their contribution share
+        //
+        // share_percent = member contributions ÷ total cycle contributions × 100
+        //
+        // share_value   = member's own contributions
+        //               + member's own interest paid
+        //               + (share_percent % × total cycle penalties collected)
+    
+        $cycleContributions  = $summary['cycle_contributions'];
+        $cyclePenaltiesTotal = $summary['cycle_penalties'];
+    
+        // Share % driven purely by contributions
+        $sharePercent = $cycleContributions > 0
+            ? round(($totalCycleContributions / $cycleContributions) * 100, 2)
             : 0;
-
+    
+        // Member's proportional slice of all penalties collected
+        $penaltyShare = round($cyclePenaltiesTotal * ($sharePercent / 100), 2);
+    
+        // Final share value: own contributions + own interest + penalty slice
+        $shareValue = round(
+            (float) $totalCycleContributions
+            + (float) $totalCycleInterest
+            + $penaltyShare,
+            2
+        );
+    
+        // ── Assemble member data ──────────────────────────────────
         $memberData = [
             'contributions'           => $contributions,
             'penalties'               => $penalties,
@@ -299,10 +323,11 @@ class GenerateMonthEndReports extends Command
             'total_contributed_cycle' => (float) $totalCycleContributions,
             'total_interest_cycle'    => (float) $totalCycleInterest,
             'share_percent'           => $sharePercent,
-            'share_value'             => round($summary['pool_balance'] * ($sharePercent / 100), 2),
+            'share_value'             => $shareValue,
+            'penalty_share'           => $penaltyShare,
             'active_loan'             => $loans->whereIn('status', ['active', 'overdue'])->first(),
         ];
-
+    
         $pdf = Pdf::loadView('reports.member-statement', [
             'society'    => $society,
             'cycle'      => $cycle,
@@ -310,10 +335,10 @@ class GenerateMonthEndReports extends Command
             'period'     => $period,
             'memberData' => $memberData,
         ])->setPaper('a4', 'portrait');
-
+    
         $filename  = "{$society->id}-member-{$member->id}-{$period->format('Y-m')}.pdf";
         $pdfOutput = $pdf->output();
-
+    
         Mail::to($member->user->email)
             ->send(new MemberMonthEndStatement(
                 society:    $society,
@@ -323,7 +348,7 @@ class GenerateMonthEndReports extends Command
                 pdfContent: $pdfOutput,
                 filename:   $filename,
             ));
-
+    
         $this->info("    Statement → {$member->user->email}");
     }
 }

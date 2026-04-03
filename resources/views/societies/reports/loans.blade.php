@@ -69,9 +69,11 @@
                             <i class="fas fa-percentage text-white"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 small">Borrower Interest</h6>
+                            <h6 class="text-muted mb-1 small">Interest (Borrower)</h6>
                             <h4 class="mb-0 fw-bold">M {{ number_format($loans->sum('interest'), 2) }}</h4>
-                            <small class="text-muted">Earned by borrowers</small>
+                            <small class="text-muted">
+                                M {{ number_format($loans->sum('interest_paid'), 2) }} collected
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -100,7 +102,8 @@
         <div class="d-flex align-items-start">
             <i class="fas fa-info-circle me-3 mt-1"></i>
             <div>
-                <strong>Note:</strong> Interest earned on loans belongs to the borrower. Penalty fees collected are shared amongst all members at year-end settlement.
+                <strong>Note:</strong> Interest earned on loans belongs to the borrower and is tracked separately.
+                Penalty fees collected are shared amongst all members at year-end settlement.
             </div>
         </div>
     </div>
@@ -138,6 +141,7 @@
                                 <th class="py-3 text-muted small text-uppercase">Member</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Principal</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Interest (Borrower)</th>
+                                <th class="py-3 text-muted small text-uppercase text-end">Interest Paid</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Penalty (Shared)</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Total Due</th>
                                 <th class="py-3 text-muted small text-uppercase text-end">Repaid</th>
@@ -168,13 +172,28 @@
                                     <span class="fw-semibold">M {{ number_format($loan->principal, 2) }}</span>
                                 </td>
                                 <td class="py-3 text-end">
-                                    <span class="text-warning fw-semibold" title="Goes to borrower">M {{ number_format($loan->interest, 2) }}</span>
+                                    <span class="text-warning fw-semibold" title="Goes to borrower">
+                                        M {{ number_format($loan->interest, 2) }}
+                                    </span>
                                 </td>
                                 <td class="py-3 text-end">
-                                    <span class="text-danger fw-semibold" title="Shared among members">M {{ number_format($loan->penalty_amount, 2) }}</span>
+                                    @php $interestRemaining = $loan->interest - $loan->interest_paid; @endphp
+                                    <span class="fw-semibold {{ $loan->interest_paid >= $loan->interest ? 'text-success' : 'text-warning' }}">
+                                        M {{ number_format($loan->interest_paid, 2) }}
+                                    </span>
+                                    @if($interestRemaining > 0)
+                                        <br><small class="text-muted">M {{ number_format($interestRemaining, 2) }} remaining</small>
+                                    @endif
                                 </td>
                                 <td class="py-3 text-end">
-                                    <span class="fw-bold">M {{ number_format($loan->principal + $loan->interest + $loan->penalty_amount, 2) }}</span>
+                                    <span class="text-danger fw-semibold" title="Shared among members">
+                                        M {{ number_format($loan->penalty_amount, 2) }}
+                                    </span>
+                                </td>
+                                <td class="py-3 text-end">
+                                    <span class="fw-bold">
+                                        M {{ number_format($loan->principal + $loan->interest + $loan->penalty_amount, 2) }}
+                                    </span>
                                 </td>
                                 <td class="py-3 text-end">
                                     <span class="text-success fw-semibold">M {{ number_format($loan->amount_repaid, 2) }}</span>
@@ -205,6 +224,7 @@
                                 <td colspan="2" class="px-4 py-3">TOTALS</td>
                                 <td class="py-3 text-end">M {{ number_format($loans->sum('principal'), 2) }}</td>
                                 <td class="py-3 text-end">M {{ number_format($loans->sum('interest'), 2) }}</td>
+                                <td class="py-3 text-end text-warning">M {{ number_format($loans->sum('interest_paid'), 2) }}</td>
                                 <td class="py-3 text-end">M {{ number_format($loans->sum('penalty_amount'), 2) }}</td>
                                 <td class="py-3 text-end">M {{ number_format($loans->sum('principal') + $loans->sum('interest') + $loans->sum('penalty_amount'), 2) }}</td>
                                 <td class="py-3 text-end">M {{ number_format($loans->sum('amount_repaid'), 2) }}</td>
@@ -220,113 +240,23 @@
 </div>
 
 <style>
-/* Icon Boxes */
-.icon-box {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.bg-gradient-success {
-    background: linear-gradient(135deg, #1dd1a1 0%, #10ac84 100%);
-}
-
-.bg-gradient-warning {
-    background: linear-gradient(135deg, #feca57 0%, #f8b500 100%);
-}
-
-.bg-gradient-danger {
-    background: linear-gradient(135deg, #f76b8a 0%, #ee5a6f 100%);
-}
-
-/* Avatar Circle */
-.avatar-circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.75rem;
-}
-
-/* Custom Badges */
-.badge-success-custom {
-    background-color: rgba(29, 209, 161, 0.1);
-    color: #1dd1a1;
-    font-weight: 600;
-    padding: 0.375rem 0.75rem;
-}
-
-.badge-info-custom {
-    background-color: rgba(84, 160, 255, 0.1);
-    color: #54a0ff;
-    font-weight: 600;
-    padding: 0.375rem 0.75rem;
-}
-
-.badge-warning-custom {
-    background-color: rgba(254, 202, 87, 0.15);
-    color: #f8b500;
-    font-weight: 600;
-    padding: 0.375rem 0.75rem;
-}
-
-/* Table Hover Effect */
-.loan-row {
-    transition: background-color 0.2s ease;
-}
-
-.loan-row:hover {
-    background-color: rgba(102, 126, 234, 0.03);
-}
-
-/* Card Hover */
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
-
-/* Breadcrumb Styling */
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin: 0;
-}
-
-.breadcrumb-item a {
-    color: #667eea;
-    text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-    text-decoration: underline;
-}
-
-/* Print Styles */
+.icon-box { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.bg-gradient-primary  { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bg-gradient-success  { background: linear-gradient(135deg, #1dd1a1 0%, #10ac84 100%); }
+.bg-gradient-warning  { background: linear-gradient(135deg, #feca57 0%, #f8b500 100%); }
+.bg-gradient-danger   { background: linear-gradient(135deg, #f76b8a 0%, #ee5a6f 100%); }
+.avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; }
+.badge-success-custom { background-color: rgba(29, 209, 161, 0.1); color: #1dd1a1; font-weight: 600; padding: 0.375rem 0.75rem; }
+.badge-info-custom    { background-color: rgba(84, 160, 255, 0.1); color: #54a0ff; font-weight: 600; padding: 0.375rem 0.75rem; }
+.badge-warning-custom { background-color: rgba(254, 202, 87, 0.15); color: #f8b500; font-weight: 600; padding: 0.375rem 0.75rem; }
+.loan-row { transition: background-color 0.2s ease; }
+.loan-row:hover { background-color: rgba(102, 126, 234, 0.03); }
+.breadcrumb { background: transparent; padding: 0; margin: 0; }
+.breadcrumb-item a { color: #667eea; text-decoration: none; }
+.breadcrumb-item a:hover { text-decoration: underline; }
 @media print {
-    .btn, .breadcrumb, .form-select, .alert {
-        display: none !important;
-    }
-    
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
-    }
+    .btn, .breadcrumb, .form-select, .alert { display: none !important; }
+    .card { box-shadow: none !important; border: 1px solid #dee2e6 !important; }
 }
 </style>
 @endsection
