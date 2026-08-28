@@ -145,7 +145,7 @@ class LoanController extends Controller
 
             foreach ($members as $m) {
                 Mail::to($m->user->email)->send(new TransactionNotification($society, $transaction, $m));
-            }
+            } 
         });
     
         return redirect()

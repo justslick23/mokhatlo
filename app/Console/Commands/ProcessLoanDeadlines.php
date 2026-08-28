@@ -90,59 +90,60 @@ class ProcessLoanDeadlines extends Command
     }
 
     // ── Apply penalty using Loan::applyPenalty() ──────────────────
-    protected function applyPenalty(Society $society, $cycle, Loan $loan): void
-    {
-        // Avoid double-penalising on the same day
-        $alreadyPenalised = $loan->reminderLogs()
-            ->whereDate('created_at', now()->toDateString())
-            ->where('type', 'loan_penalty')
-            ->exists();
-
-        if ($alreadyPenalised) {
-            $this->warn("  Penalty already applied today → Loan #{$loan->id}. Skipping.");
-            return;
+        // ── Apply penalty using Loan::applyPenalty() ──────────────────
+        protected function applyPenalty(Society $society, $cycle, Loan $loan): void
+        {
+            // Only ever penalise a loan ONCE — not once-per-day.
+            // If a penalty has already been logged for this loan (any date), skip permanently.
+            $alreadyPenalised = $loan->reminderLogs()
+                ->where('type', 'loan_penalty')
+                ->exists();
+    
+            if ($alreadyPenalised) {
+                $this->warn("  Penalty already applied previously → Loan #{$loan->id}. Skipping.");
+                return;
+            }
+    
+            // Calculate penalty amount BEFORE applying
+            // (mirrors Loan::applyPenalty() logic so we can record the Transaction)
+            if ($society->penalty_type === 'fixed') {
+                $penaltyAmount = (float) $society->penalty_value;
+            } else {
+                $penaltyAmount = round(
+                    $loan->outstanding_balance * ($society->penalty_value / 100),
+                    2
+                );
+            }
+    
+            // Use the existing applyPenalty() on the Loan model
+            // which updates penalty_amount, outstanding_balance and sets status = 'overdue'
+            $loan->applyPenalty();
+    
+            // Record as a Transaction for financial tracking
+            Transaction::create([
+                'society_id'       => $society->id,
+                'member_id'        => $loan->member_id,
+                'cycle_id'         => $cycle->id,
+                'loan_id'          => $loan->id,
+                'type'             => 'penalty',
+                'amount'           => $penaltyAmount,
+                'transaction_date' => now()->toDateString(),
+                'notes'            => $society->penalty_type === 'fixed'
+                    ? "Auto-penalty: fixed M{$penaltyAmount} on overdue Loan #{$loan->id}."
+                    : "Auto-penalty: {$society->penalty_value}% of outstanding balance (M{$loan->outstanding_balance}) on Loan #{$loan->id}.",
+            ]);
+    
+            // Log it so we never re-penalise this loan again
+            $loan->reminderLogs()->create([
+                'society_id' => $society->id,
+                'member_id'  => $loan->member_id,
+                'type'       => 'loan_penalty',
+                'message'    => "Penalty M{$penaltyAmount} applied on Loan #{$loan->id}. New balance: M{$loan->outstanding_balance}",
+            ]);
+    
+            Mail::to($loan->member->user->email)
+                ->send(new LoanPenaltyApplied($society, $loan, $penaltyAmount));
+    
+            $this->info("  Penalty applied → {$loan->member->user->email} (Loan #{$loan->id}, M{$penaltyAmount})");
         }
-
-        // Calculate penalty amount BEFORE applying
-        // (mirrors Loan::applyPenalty() logic so we can record the Transaction)
-        if ($society->penalty_type === 'fixed') {
-            $penaltyAmount = (float) $society->penalty_value;
-        } else {
-            $penaltyAmount = round(
-                $loan->outstanding_balance * ($society->penalty_value / 100),
-                2
-            );
-        }
-
-        // Use the existing applyPenalty() on the Loan model
-        // which updates penalty_amount, outstanding_balance and sets status = 'overdue'
-        $loan->applyPenalty();
-
-        // Record as a Transaction for financial tracking
-        Transaction::create([
-            'society_id'       => $society->id,
-            'member_id'        => $loan->member_id,
-            'cycle_id'         => $cycle->id,
-            'loan_id'          => $loan->id,
-            'type'             => 'penalty',
-            'amount'           => $penaltyAmount,
-            'transaction_date' => now()->toDateString(),
-            'notes'            => $society->penalty_type === 'fixed'
-                ? "Auto-penalty: fixed M{$penaltyAmount} on overdue Loan #{$loan->id}."
-                : "Auto-penalty: {$society->penalty_value}% of outstanding balance (M{$loan->outstanding_balance}) on Loan #{$loan->id}.",
-        ]);
-
-        // Log it so we don't double-penalise today
-        $loan->reminderLogs()->create([
-            'society_id' => $society->id,
-            'member_id'  => $loan->member_id,
-            'type'       => 'loan_penalty',
-            'message'    => "Penalty M{$penaltyAmount} applied on Loan #{$loan->id}. New balance: M{$loan->outstanding_balance}",
-        ]);
-
-        Mail::to($loan->member->user->email)
-            ->send(new LoanPenaltyApplied($society, $loan, $penaltyAmount));
-
-        $this->info("  Penalty applied → {$loan->member->user->email} (Loan #{$loan->id}, M{$penaltyAmount})");
-    }
 }

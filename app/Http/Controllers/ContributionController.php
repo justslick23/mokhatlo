@@ -6,6 +6,8 @@ use App\Models\Society;
 use App\Models\Member;
 use App\Models\Transaction;
 use App\Mail\TransactionNotification;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -50,46 +52,66 @@ class ContributionController extends Controller
     /**
      * Store contribution.
      */
-    public function store(Request $request, Society $society)
-    {
-        $this->authorizeFinance($society);
 
-        $cycleId = session('current_cycle_id');
-        abort_if(!$cycleId, 403, 'No active cycle');
 
-        $data = $request->validate([
-            'member_id' => 'required|exists:members,id',
-            'amount'    => 'required|numeric|min:1',
-            'date'      => 'required|date',
-            'notes'     => 'nullable|string|max:500',
-        ]);
+public function store(Request $request, Society $society)
+{
+    $this->authorizeFinance($society);
 
-        $member = Member::where('society_id', $society->id)
-            ->findOrFail($data['member_id']);
+    $cycleId = session('current_cycle_id');
+    abort_if(!$cycleId, 403, 'No active cycle');
 
-        $transaction = Transaction::create([
-            'society_id' => $society->id,
-            'member_id'  => $member->id,
-            'cycle_id'   => $cycleId,
-            'type'       => 'contribution',
-            'amount'     => $data['amount'],
-            'transaction_date'       => $data['date'],
-            'notes'      => $data['notes'] ?? null,
-        ]);
+    $data = $request->validate([
+        'member_id' => 'required|exists:members,id',
+        'amount'    => 'required|numeric|min:1',
+        'date'      => 'required|date',
+        'notes'     => 'nullable|string|max:500',
+    ]);
 
-        // Notify all members of the transaction
-        $members = $society->members()
-            ->with('user')
-            ->get();
+    $member = Member::where('society_id', $society->id)
+        ->findOrFail($data['member_id']);
 
-        foreach ($members as $m) {
-            Mail::to($m->user->email)->send(new TransactionNotification($society, $transaction, $m));
+    $transaction = Transaction::create([
+        'society_id'       => $society->id,
+        'member_id'        => $member->id,
+        'cycle_id'         => $cycleId,
+        'type'             => 'contribution',
+        'amount'           => $data['amount'],
+        'transaction_date' => $data['date'],
+        'notes'            => $data['notes'] ?? null,
+    ]);
+
+    // Notify all members
+    $members = $society->members()
+        ->with('user')
+        ->get();
+
+    foreach ($members as $m) {
+        try {
+            Mail::to($m->user->email)
+                ->send(new TransactionNotification($society, $transaction, $m));
+
+            Log::info('Contribution email sent successfully', [
+                'email'          => $m->user->email,
+                'member_id'      => $m->id,
+                'transaction_id' => $transaction->id,
+                'society_id'     => $society->id,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Contribution email failed', [
+                'email'          => $m->user->email,
+                'member_id'      => $m->id,
+                'transaction_id' => $transaction->id,
+                'society_id'     => $society->id,
+                'error'          => $e->getMessage(),
+            ]);
         }
-
-        return redirect()
-            ->route('societies.contributions.index', $society)
-            ->with('success', 'Contribution recorded successfully.');
     }
+
+    return redirect()
+        ->route('societies.contributions.index', $society)
+        ->with('success', 'Contribution recorded successfully.');
+}
 
     /**
      * View single contribution.

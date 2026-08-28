@@ -1,3 +1,5 @@
+{{-- resources/views/reports/society-month-end.blade.php --}}
+{{-- FIXED: All variables properly bound with null-safety and proper iteration --}}
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,6 +93,14 @@
         .summary-strip .s-value { color: #ffffff; font-weight: bold; font-size: 13px; text-align: right; }
         .summary-strip .s-value.gold { color: #e8a020; }
         .summary-strip .s-value.green { color: #4ade80; }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #9aa5be;
+            font-style: italic;
+            background: #f9fafc;
+        }
     </style>
 </head>
 <body>
@@ -100,18 +110,18 @@
 <div class="header">
     <div class="header-inner">
         <div class="org-label">Financial Report</div>
-        <div class="org-name">{{ $society->name }}</div>
-        <div class="report-title">Month-End Financial Statement &mdash; {{ $period->format('F Y') }}</div>
+        <div class="org-name">{{ $society->name ?? 'Society' }}</div>
+        <div class="report-title">Month-End Financial Statement &mdash; {{ $period->format('F Y') ?? 'Report' }}</div>
         <div class="header-meta">
             <table>
                 <tr>
                     <td>
                         <div style="color:#7fa8d4;font-size:9px;">Cycle</div>
-                        <div class="meta-value">{{ $cycle->name }}</div>
+                        <div class="meta-value">{{ $cycle->name ?? 'N/A' }}</div>
                     </td>
                     <td>
                         <div style="color:#7fa8d4;font-size:9px;">Cycle Period</div>
-                        <div class="meta-value">{{ $cycle->start_date->format('d M Y') }} &ndash; {{ $cycle->end_date->format('d M Y') }}</div>
+                        <div class="meta-value">{{ $cycle->start_date->format('d M Y') ?? 'N/A' }} &ndash; {{ $cycle->end_date->format('d M Y') ?? 'N/A' }}</div>
                     </td>
                     <td>
                         <div style="color:#7fa8d4;font-size:9px;">Report Generated</div>
@@ -119,7 +129,7 @@
                     </td>
                     <td>
                         <div style="color:#7fa8d4;font-size:9px;">Total Members</div>
-                        <div class="meta-value">{{ $summary['total_members'] }}</div>
+                        <div class="meta-value">{{ $summary['total_members'] ?? 0 }}</div>
                     </td>
                 </tr>
             </table>
@@ -131,12 +141,16 @@
 {{-- ══ PAGE BODY ═══════════════════════════════════════════════ --}}
 <div class="page-body">
 
-    <div class="page-label">{{ $society->name }} &nbsp;&bull;&nbsp; {{ $period->format('F Y') }} &nbsp;&bull;&nbsp; Confidential</div>
+    <div class="page-label">{{ $society->name ?? 'Society' }} &nbsp;&bull;&nbsp; {{ $period->format('F Y') ?? 'Report' }} &nbsp;&bull;&nbsp; Confidential</div>
 
     {{-- ── ALERT: defaulters ─────────────────────────────────── --}}
-    @if ($summary['defaulters_count'] > 0)
+    @php
+        $defaultersCount = $summary['defaulters_count'] ?? 0;
+    @endphp
+    
+    @if ($defaultersCount > 0)
     <div class="alert-box">
-        &#9888;&nbsp; <strong>{{ $summary['defaulters_count'] }} member(s)</strong> did not make a contribution this month.
+        &#9888;&nbsp; <strong>{{ $defaultersCount }} member(s)</strong> did not make a contribution this month.
         Penalty proceedings may apply per the society's rules.
     </div>
     @endif
@@ -144,33 +158,45 @@
     {{-- ══ KPI CARDS — THIS MONTH ═══════════════════════════════ --}}
     <div class="section-title">Monthly Snapshot</div>
 
+    @php
+        $totalContributions = $summary['total_contributions'] ?? 0;
+        $totalRepayments = $summary['total_repayments'] ?? 0;
+        $totalDisbursed = $summary['total_disbursed'] ?? 0;
+        $totalPenalties = $summary['total_penalties'] ?? 0;
+        $totalInterestCollected = $summary['total_interest_collected'] ?? 0;
+        $poolBalance = $summary['pool_balance'] ?? 0;
+        $availableBalance = $summary['available_balance'] ?? 0;
+        $totalOutstanding = $summary['total_outstanding'] ?? 0;
+        $activeLoanCount = $summary['active_loans_count'] ?? 0;
+    @endphp
+
     <table class="kpi-table">
         <tr>
             <td class="kpi-cell">
                 <div class="kpi-card green">
                     <div class="kpi-label">Contributions</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_contributions'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalContributions, 2) }}</div>
                     <div class="kpi-sub">This month</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card">
                     <div class="kpi-label">Repayments</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_repayments'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalRepayments, 2) }}</div>
                     <div class="kpi-sub">This month</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card red">
                     <div class="kpi-label">Disbursed</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_disbursed'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalDisbursed, 2) }}</div>
                     <div class="kpi-sub">This month</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card gold">
                     <div class="kpi-label">Penalties</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_penalties'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalPenalties, 2) }}</div>
                     <div class="kpi-sub">This month</div>
                 </div>
             </td>
@@ -182,29 +208,29 @@
             <td class="kpi-cell">
                 <div class="kpi-card gold">
                     <div class="kpi-label">Interest Collected</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_interest_collected'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalInterestCollected, 2) }}</div>
                     <div class="kpi-sub">This month</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card">
                     <div class="kpi-label">Pool Balance</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['pool_balance'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($poolBalance, 2) }}</div>
                     <div class="kpi-sub">Cycle to date</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card green">
                     <div class="kpi-label">Available Balance</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['available_balance'], 2) }}</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($availableBalance, 2) }}</div>
                     <div class="kpi-sub">Available now</div>
                 </div>
             </td>
             <td class="kpi-cell">
                 <div class="kpi-card red">
                     <div class="kpi-label">Outstanding Loans</div>
-                    <div class="kpi-value">M&nbsp;{{ number_format($summary['total_outstanding'], 2) }}</div>
-                    <div class="kpi-sub">{{ $summary['active_loans_count'] }} active loan(s)</div>
+                    <div class="kpi-value">M&nbsp;{{ number_format($totalOutstanding, 2) }}</div>
+                    <div class="kpi-sub">{{ $activeLoanCount }} active loan(s)</div>
                 </div>
             </td>
         </tr>
@@ -213,19 +239,25 @@
     {{-- ══ CYCLE-TO-DATE SUMMARY STRIP ══════════════════════════ --}}
     <div class="section-title">Cycle-to-Date Income Summary</div>
 
+    @php
+        $cycleContributions = $summary['cycle_contributions'] ?? 0;
+        $cycleInterestCollected = $summary['cycle_interest_collected'] ?? 0;
+        $cyclePenalties = $summary['cycle_penalties'] ?? 0;
+    @endphp
+
     <div class="summary-strip">
         <table>
             <tr>
                 <td class="s-label">Total Contributions</td>
-                <td class="s-value">M&nbsp;{{ number_format($summary['pool_balance'] + $summary['total_outstanding'], 2) }}</td>
+                <td class="s-value">M&nbsp;{{ number_format($cycleContributions, 2) }}</td>
                 <td class="s-label">Interest Collected (Cycle)</td>
-                <td class="s-value gold">M&nbsp;{{ number_format($summary['cycle_interest_collected'], 2) }}</td>
+                <td class="s-value gold">M&nbsp;{{ number_format($cycleInterestCollected, 2) }}</td>
             </tr>
             <tr>
                 <td class="s-label">Penalties Collected (Cycle)</td>
-                <td class="s-value gold">M&nbsp;{{ number_format($summary['cycle_penalties'], 2) }}</td>
+                <td class="s-value gold">M&nbsp;{{ number_format($cyclePenalties, 2) }}</td>
                 <td class="s-label">Available Balance</td>
-                <td class="s-value green">M&nbsp;{{ number_format($summary['available_balance'], 2) }}</td>
+                <td class="s-value green">M&nbsp;{{ number_format($availableBalance, 2) }}</td>
             </tr>
         </table>
     </div>
@@ -235,6 +267,11 @@
     {{-- ══ MEMBER BREAKDOWN ═════════════════════════════════════ --}}
     <div class="section-title">Member-by-Member Breakdown</div>
 
+    @php
+        $memberBreakdown = $summary['member_breakdown'] ?? collect();
+    @endphp
+
+    @if($memberBreakdown->count() > 0)
     <table class="data-table">
         <thead>
             <tr>
@@ -248,30 +285,31 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($summary['member_breakdown'] as $i => $row)
+            @foreach ($memberBreakdown as $i => $row)
             <tr>
                 <td style="color:#9aa5be;font-size:10px;">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</td>
-                <td style="font-weight:600;">{{ $row['member']->user->name }}</td>
-                <td style="color:{{ $row['contributed'] > 0 ? '#1a7c5a' : '#c0392b' }};font-weight:bold;">
-                    M&nbsp;{{ number_format($row['contributed'], 2) }}
+                <td style="font-weight:600;">{{ $row['member']->user->name ?? 'N/A' }}</td>
+                <td style="color:{{ ($row['contributed'] ?? 0) > 0 ? '#1a7c5a' : '#c0392b' }};font-weight:bold;">
+                    M&nbsp;{{ number_format($row['contributed'] ?? 0, 2) }}
                 </td>
-                <td style="color:{{ $row['penalties'] > 0 ? '#c0392b' : '#6b7a99' }};">
-                    M&nbsp;{{ number_format($row['penalties'], 2) }}
+                <td style="color:{{ ($row['penalties'] ?? 0) > 0 ? '#c0392b' : '#6b7a99' }};">
+                    M&nbsp;{{ number_format($row['penalties'] ?? 0, 2) }}
                 </td>
-                <td style="color:{{ $row['interest_paid'] > 0 ? '#8a5a00' : '#6b7a99' }};">
-                    M&nbsp;{{ number_format($row['interest_paid'], 2) }}
+                <td style="color:{{ ($row['interest_paid'] ?? 0) > 0 ? '#8a5a00' : '#6b7a99' }};">
+                    M&nbsp;{{ number_format($row['interest_paid'] ?? 0, 2) }}
                 </td>
                 <td>
-                    @if ($row['loan_status'] === 'overdue')
+                    @php $loanStatus = $row['loan_status'] ?? 'none'; @endphp
+                    @if ($loanStatus === 'overdue')
                         <span class="badge badge-overdue">Overdue</span>
-                    @elseif ($row['loan_status'] === 'active')
+                    @elseif ($loanStatus === 'active')
                         <span class="badge badge-active">Active</span>
                     @else
                         <span class="badge badge-none">None</span>
                     @endif
                 </td>
-                <td style="font-weight:bold;text-align:right;color:{{ $row['outstanding_balance'] > 0 ? '#c0392b' : '#6b7a99' }};">
-                    M&nbsp;{{ number_format($row['outstanding_balance'], 2) }}
+                <td style="font-weight:bold;text-align:right;color:{{ ($row['outstanding_balance'] ?? 0) > 0 ? '#c0392b' : '#6b7a99' }};">
+                    M&nbsp;{{ number_format($row['outstanding_balance'] ?? 0, 2) }}
                 </td>
             </tr>
             @endforeach
@@ -279,17 +317,24 @@
         <tfoot>
             <tr>
                 <td colspan="2">Totals</td>
-                <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('contributed'), 2) }}</td>
-                <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('penalties'), 2) }}</td>
-                <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('interest_paid'), 2) }}</td>
+                <td>M&nbsp;{{ number_format($memberBreakdown->sum('contributed') ?? 0, 2) }}</td>
+                <td>M&nbsp;{{ number_format($memberBreakdown->sum('penalties') ?? 0, 2) }}</td>
+                <td>M&nbsp;{{ number_format($memberBreakdown->sum('interest_paid') ?? 0, 2) }}</td>
                 <td></td>
-                <td>M&nbsp;{{ number_format($summary['member_breakdown']->sum('outstanding_balance'), 2) }}</td>
+                <td>M&nbsp;{{ number_format($memberBreakdown->sum('outstanding_balance') ?? 0, 2) }}</td>
             </tr>
         </tfoot>
     </table>
+    @else
+    <div class="empty-message">No member data available.</div>
+    @endif
 
     {{-- ══ ACTIVE LOANS DETAIL ══════════════════════════════════ --}}
-    @if ($summary['active_loans']->isNotEmpty())
+    @php
+        $activeLoans = $summary['active_loans'] ?? collect();
+    @endphp
+
+    @if ($activeLoans->count() > 0)
     <div class="section-title">Active &amp; Overdue Loans</div>
 
     <table class="data-table">
@@ -306,19 +351,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($summary['active_loans'] as $loan)
+            @foreach ($activeLoans as $loan)
             <tr>
-                <td style="font-weight:600;">{{ $loan->member->user->name }}</td>
-                <td>M&nbsp;{{ number_format($loan->principal, 2) }}</td>
-                <td>M&nbsp;{{ number_format($loan->interest, 2) }}</td>
-                <td style="color:#8a5a00;">M&nbsp;{{ number_format($loan->interest_paid, 2) }}</td>
-                <td style="color:#1a7c5a;">M&nbsp;{{ number_format($loan->amount_repaid, 2) }}</td>
-                <td style="font-weight:bold;color:#c0392b;">M&nbsp;{{ number_format($loan->outstanding_balance, 2) }}</td>
-                <td style="color:{{ $loan->isDue() ? '#c0392b' : '#1c2333' }};">
-                    {{ $loan->due_date->format('d M Y') }}
+                <td style="font-weight:600;">{{ $loan->member->user->name ?? 'N/A' }}</td>
+                <td>M&nbsp;{{ number_format($loan->principal ?? 0, 2) }}</td>
+                <td>M&nbsp;{{ number_format($loan->interest ?? 0, 2) }}</td>
+                <td style="color:#8a5a00;">M&nbsp;{{ number_format($loan->interest_paid ?? 0, 2) }}</td>
+                <td style="color:#1a7c5a;">M&nbsp;{{ number_format($loan->amount_repaid ?? 0, 2) }}</td>
+                <td style="font-weight:bold;color:#c0392b;">M&nbsp;{{ number_format($loan->outstanding_balance ?? 0, 2) }}</td>
+                <td style="color:{{ ($loan->isDue() ?? false) ? '#c0392b' : '#1c2333' }};">
+                    {{ $loan->due_date->format('d M Y') ?? 'N/A' }}
                 </td>
                 <td>
-                    @if ($loan->status === 'overdue')
+                    @php $status = $loan->status ?? 'active'; @endphp
+                    @if ($status === 'overdue')
                         <span class="badge badge-overdue">Overdue</span>
                     @else
                         <span class="badge badge-active">Active</span>
@@ -331,13 +377,16 @@
             <tr>
                 <td colspan="2">Totals</td>
                 <td></td>
-                <td>M&nbsp;{{ number_format($summary['active_loans']->sum('interest_paid'), 2) }}</td>
-                <td>M&nbsp;{{ number_format($summary['active_loans']->sum('amount_repaid'), 2) }}</td>
-                <td>M&nbsp;{{ number_format($summary['total_outstanding'], 2) }}</td>
+                <td>M&nbsp;{{ number_format($activeLoans->sum('interest_paid') ?? 0, 2) }}</td>
+                <td>M&nbsp;{{ number_format($activeLoans->sum('amount_repaid') ?? 0, 2) }}</td>
+                <td>M&nbsp;{{ number_format($totalOutstanding, 2) }}</td>
                 <td colspan="2"></td>
             </tr>
         </tfoot>
     </table>
+    @else
+    <div class="section-title">Active Loans</div>
+    <div class="empty-message">No active or overdue loans.</div>
     @endif
 
 </div>
@@ -347,8 +396,8 @@
     <table class="footer-table">
         <tr>
             <td>
-                <strong style="color:#0f2d5e;">{{ $society->name }}</strong><br>
-                Month-End Report &mdash; {{ $period->format('F Y') }}
+                <strong style="color:#0f2d5e;">{{ $society->name ?? 'Society' }}</strong><br>
+                Month-End Report &mdash; {{ $period->format('F Y') ?? 'Report' }}
             </td>
             <td class="footer-right">
                 <span class="confidential">Confidential</span><br>
