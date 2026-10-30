@@ -1,0 +1,19 @@
+// Add near the other imports in routes/web.php:
+use App\Http\Controllers\LegacyContributionAttributionController;
+
+// Add outside other groups; current-society middleware and CSRF are required.
+Route::middleware(['auth', 'verified', 'society'])->group(function () {
+    Route::get('/legacy/reconciliation/contributions',
+        [LegacyContributionAttributionController::class, 'index'])
+        ->name('legacy.contributions.index');
+
+    Route::post('/legacy/reconciliation/runs/{run}/receipts/{payment}/periods',
+        [LegacyContributionAttributionController::class, 'store'])
+        ->whereNumber('run')->whereNumber('payment')
+        ->name('legacy.contributions.store');
+
+    Route::post('/legacy/reconciliation/runs/{run}/receipts/{payment}/periods/{attribution}/reverse',
+        [LegacyContributionAttributionController::class, 'reverse'])
+        ->whereNumber('run')->whereNumber('payment')->whereNumber('attribution')
+        ->name('legacy.contributions.reverse');
+});

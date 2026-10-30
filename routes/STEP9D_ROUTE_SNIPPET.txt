@@ -1,0 +1,12 @@
+// Add at top of routes/web.php with your other controller imports:
+use App\Http\Controllers\LegacyReconciliationController;
+
+// Add OUTSIDE any existing route group (so the middleware executes once),
+// preferably at the bottom of routes/web.php:
+Route::middleware(['auth', 'verified', 'society'])->get(
+    '/legacy/reconciliation',
+    [LegacyReconciliationController::class, 'index']
+)->name('legacy.reconciliation.index');
+
+// This GET route only reads data. Controller also checks 'society.manage',
+// so only a user with that active-society permission may access it.

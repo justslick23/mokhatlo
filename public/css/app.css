@@ -1,0 +1,1061 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+:root {
+    --mk-primary: #172554;
+    --mk-primary-light: #1e40af;
+    --mk-accent: #d9a441;
+    --mk-bg: #f5f7fb;
+    --mk-surface: #ffffff;
+    --mk-text: #17243b;
+    --mk-muted: #73809a;
+    --mk-border: #e6ebf3;
+    --mk-success: #168267;
+    --mk-radius: 16px;
+    --mk-shadow: 0 8px 30px rgba(22, 40, 78, .045);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, "Segoe UI", system-ui, sans-serif;
+    color: var(--mk-text);
+    background: var(--mk-bg);
+    font-size: 14px;
+}
+
+a {
+    color: var(--mk-primary-light);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--mk-primary);
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: .65rem 1rem;
+}
+
+.btn-primary {
+    --bs-btn-bg: #1e40af;
+    --bs-btn-border-color: #1e40af;
+    --bs-btn-hover-bg: #172554;
+    --bs-btn-hover-border-color: #172554;
+    --bs-btn-active-bg: #172554;
+    --bs-btn-active-border-color: #172554;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #1e40af;
+    --bs-btn-border-color: #1e40af;
+    --bs-btn-hover-bg: #1e40af;
+    --bs-btn-hover-border-color: #1e40af;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid var(--mk-border);
+    border-radius: 10px;
+    padding: .75rem .85rem;
+    font-size: .92rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #7895da;
+    box-shadow: 0 0 0 .2rem rgba(30, 64, 175, .10);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: .84rem;
+    margin-bottom: .55rem;
+}
+
+.brand-mark {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--mk-primary-light);
+    color: #fff;
+    font-size: 1.35rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* Authentication */
+
+.auth-screen {
+    min-height: 100vh;
+    background: var(--mk-surface);
+}
+
+.auth-intro {
+    min-height: 100vh;
+    background: linear-gradient(145deg, #111b40, #1e40af);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 5rem;
+}
+
+.auth-intro::after {
+    content: "";
+    position: absolute;
+    height: 500px;
+    width: 500px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
+    bottom: -220px;
+    right: -180px;
+    box-shadow:
+        0 0 0 65px rgba(255,255,255,.025),
+        0 0 0 130px rgba(255,255,255,.02);
+    pointer-events: none;
+}
+
+.auth-intro-content {
+    max-width: 540px;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-intro h1 {
+    font-size: clamp(2.5rem, 4vw, 4.2rem);
+    font-weight: 750;
+    letter-spacing: -.05em;
+    line-height: 1.12;
+}
+
+.auth-intro p {
+    color: #d1defd;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.auth-content {
+    width: 100%;
+    max-width: 445px;
+    padding: 3rem 1.5rem;
+}
+
+.auth-title {
+    font-size: 1.85rem;
+    font-weight: 750;
+    letter-spacing: -.035em;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    font-size: .7rem;
+    font-weight: 750;
+    color: var(--mk-primary-light);
+    letter-spacing: .13em;
+}
+
+.muted {
+    color: var(--mk-muted);
+}
+
+/* Dashboard Layout */
+
+.app-sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-right: 1px solid var(--mk-border);
+    z-index: 1020;
+    padding: 1.5rem 1rem;
+}
+
+.app-main {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+
+.app-topbar {
+    height: 76px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--mk-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    gap: 1rem;
+}
+
+.app-content {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.nav-section-label {
+    color: #9da7ba;
+    font-size: .66rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: .12em;
+    margin: 2rem .9rem .75rem;
+}
+
+.app-nav-link {
+    display: flex;
+    align-items: center;
+    padding: .85rem 1rem;
+    border-radius: 10px;
+    color: #68758e;
+    font-weight: 600;
+    margin-bottom: .3rem;
+    transition: .18s ease;
+}
+
+.app-nav-link:hover {
+    background: #f0f4ff;
+    color: var(--mk-primary-light);
+}
+
+.app-nav-link.active {
+    background: #eaf0ff;
+    color: var(--mk-primary-light);
+}
+
+.page-title {
+    font-size: clamp(1.65rem, 2.6vw, 2.25rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+    margin-bottom: 0;
+}
+
+.card-soft {
+    background: var(--mk-surface);
+    border: 1px solid var(--mk-border);
+    border-radius: var(--mk-radius);
+    box-shadow: var(--mk-shadow);
+}
+
+.card-soft .card-body {
+    padding: 1.5rem;
+}
+
+.metric-label {
+    font-size: .83rem;
+    font-weight: 600;
+    color: var(--mk-muted);
+}
+
+.metric-value {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 750;
+    letter-spacing: -.04em;
+    margin-top: .8rem;
+}
+
+.metric-icon {
+    width: 38px;
+    height: 38px;
+    background: #edf2ff;
+    color: var(--mk-primary-light);
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+.society-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: #eaf0ff;
+    color: var(--mk-primary-light);
+    font-size: 1.2rem;
+    font-weight: 750;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.society-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    gap: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid var(--mk-border);
+    border-radius: 13px;
+    transition: .18s ease;
+}
+
+.society-option:hover {
+    border-color: #abc0f1;
+    transform: translateY(-2px);
+    box-shadow: var(--mk-shadow);
+}
+
+.hero-panel {
+    border-radius: var(--mk-radius);
+    padding: 2rem;
+    color: white;
+    background: linear-gradient(125deg, #172554, #315ac1);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-panel p {
+    color: #d9e5ff;
+}
+
+.empty-state {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--mk-muted);
+}
+
+.empty-state h3 {
+    color: var(--mk-text);
+}
+
+.avatar-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaf0ff;
+    color: #1e40af;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: .85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        display: none;
+    }
+
+    .app-main {
+        margin-left: 0;
+    }
+
+    .app-topbar {
+        padding: 0 1rem;
+    }
+
+    .app-content {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .auth-content {
+        padding: 2rem 1.25rem;
+    }
+
+    .metric-value {
+        font-size: 1.65rem;
+    }
+
+    .hero-panel {
+        padding: 1.5rem;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 - Theme System
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    color-scheme: light;
+
+    --mk-primary: #172554;
+    --mk-primary-light: #1e40af;
+
+    --mk-bg: #f5f7fb;
+    --mk-surface: #ffffff;
+    --mk-text: #17243b;
+    --mk-muted: #73809a;
+    --mk-border: #e6ebf3;
+
+    --mk-nav-hover: #f0f4ff;
+    --mk-nav-active: #eaf0ff;
+
+    --mk-icon-bg: #edf2ff;
+    --mk-icon-color: #1e40af;
+
+    --mk-shadow: 0 8px 30px rgba(22, 40, 78, .045);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Theme Tokens
+|--------------------------------------------------------------------------
+*/
+
+html[data-bs-theme="dark"] {
+    color-scheme: dark;
+
+    --mk-primary: #afc2ff;
+    --mk-primary-light: #a9bdff;
+
+    --mk-bg: #0b1220;
+    --mk-surface: #151f30;
+    --mk-text: #e8edf7;
+    --mk-muted: #a5b2c6;
+    --mk-border: #2a3850;
+
+    --mk-nav-hover: #1d2b44;
+    --mk-nav-active: #24395c;
+
+    --mk-icon-bg: #23385b;
+    --mk-icon-color: #b9cbff;
+
+    --mk-shadow: 0 8px 30px rgba(0, 0, 0, .12);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Theme-Aware Components
+|--------------------------------------------------------------------------
+*/
+
+body {
+    background: var(--mk-bg);
+    color: var(--mk-text);
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+}
+
+.auth-screen,
+.app-sidebar,
+.app-topbar,
+.card-soft,
+.society-option {
+    background: var(--mk-surface);
+    color: var(--mk-text);
+    border-color: var(--mk-border);
+}
+
+.app-sidebar,
+.app-topbar,
+.card-soft,
+.society-option,
+.form-control,
+.form-select {
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+}
+
+.app-nav-link {
+    color: var(--mk-muted);
+}
+
+.app-nav-link:hover {
+    background: var(--mk-nav-hover);
+    color: var(--mk-primary-light);
+}
+
+.app-nav-link.active {
+    background: var(--mk-nav-active);
+    color: var(--mk-primary-light);
+}
+
+.metric-icon,
+.society-mark,
+.avatar-circle {
+    background: var(--mk-icon-bg);
+    color: var(--mk-icon-color);
+}
+
+.muted,
+.metric-label {
+    color: var(--mk-muted);
+}
+
+.nav-section-label {
+    color: var(--mk-muted);
+}
+
+.page-title,
+.section-title,
+.empty-state h3 {
+    color: var(--mk-text);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Theme Fine-Tuning
+|--------------------------------------------------------------------------
+*/
+
+html[data-bs-theme="dark"] .form-control,
+html[data-bs-theme="dark"] .form-select {
+    background-color: var(--mk-surface);
+    border-color: var(--mk-border);
+    color: var(--mk-text);
+}
+
+html[data-bs-theme="dark"] .form-control::placeholder {
+    color: var(--mk-muted);
+    opacity: .75;
+}
+
+html[data-bs-theme="dark"] .form-control:focus,
+html[data-bs-theme="dark"] .form-select:focus {
+    background-color: var(--mk-surface);
+    border-color: #7895da;
+    color: var(--mk-text);
+}
+
+html[data-bs-theme="dark"] .text-dark {
+    color: var(--mk-text) !important;
+}
+
+html[data-bs-theme="dark"] .offcanvas {
+    background: var(--mk-surface);
+    color: var(--mk-text);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Theme Toggle
+|--------------------------------------------------------------------------
+*/
+
+.mk-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: .65rem .9rem;
+    white-space: nowrap;
+}
+
+.mk-theme-toggle-guest {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    background: var(--mk-surface);
+    color: var(--mk-text);
+    border-color: var(--mk-border);
+}
+
+.mk-theme-toggle i {
+    font-size: 1rem;
+}
+
+@media (max-width: 575.98px) {
+    .mk-theme-toggle {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body,
+    .app-sidebar,
+    .app-topbar,
+    .card-soft,
+    .society-option {
+        transition: none;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 - Member and Cycle Management
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    --mk-info-bg: #edf3ff;
+    --mk-info-border: #dce7ff;
+    --mk-info-text: #27477e;
+}
+
+html[data-bs-theme="dark"] {
+    --mk-info-bg: #1b2d48;
+    --mk-info-border: #314564;
+    --mk-info-text: #bfceef;
+}
+
+/* Information Panels */
+
+.mk-info-panel {
+    background: var(--mk-info-bg);
+    color: var(--mk-info-text);
+    border: 1px solid var(--mk-info-border);
+    border-radius: 13px;
+    padding: 1.25rem;
+}
+
+.mk-info-panel p {
+    line-height: 1.7;
+}
+
+/* Tables */
+
+.mk-table {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.mk-table thead th {
+    font-size: .72rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+    white-space: nowrap;
+    color: var(--mk-muted);
+    padding: 1rem;
+    border-bottom: 1px solid var(--mk-border);
+}
+
+.mk-table tbody td {
+    padding: 1rem;
+    border-bottom-color: var(--mk-border);
+    font-size: .88rem;
+}
+
+.mk-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.mk-table strong {
+    font-weight: 650;
+}
+
+html[data-bs-theme="dark"] .mk-table {
+    --bs-table-bg: var(--mk-surface);
+    --bs-table-color: var(--mk-text);
+    --bs-table-border-color: var(--mk-border);
+    --bs-table-hover-bg: #202f47;
+    --bs-table-hover-color: var(--mk-text);
+}
+
+/* Cycle Forms */
+
+.card-soft .form-label {
+    font-weight: 650;
+}
+
+.card-soft .form-text {
+    color: var(--mk-muted);
+    line-height: 1.6;
+}
+
+.card-soft .input-group-text {
+    background: var(--mk-bg);
+    color: var(--mk-muted);
+    border-color: var(--mk-border);
+    border-radius: 0 10px 10px 0;
+}
+
+/* Responsive Tables */
+
+@media (max-width: 767.98px) {
+    .mk-table {
+        min-width: 650px;
+    }
+
+    .mk-table thead th,
+    .mk-table tbody td {
+        padding: .85rem;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 - Penalties & Financial Transactions
+|--------------------------------------------------------------------------
+*/
+
+.mk-ledger-details {
+    font-size: .82rem;
+}
+
+.mk-ledger-details summary {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: var(--mk-primary-light);
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mk-ledger-details summary:hover {
+    text-decoration: underline;
+}
+
+.mk-ledger-details[open] {
+    padding-top: .25rem;
+}
+
+.mk-ledger-details .table-responsive {
+    border: 1px solid var(--mk-border);
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.mk-ledger-details .mk-table {
+    min-width: 320px;
+}
+
+.mk-ledger-details .mk-table th,
+.mk-ledger-details .mk-table td {
+    padding: .65rem;
+    font-size: .78rem;
+}
+
+html[data-bs-theme="dark"] .mk-ledger-details summary {
+    color: #b9cbff;
+}
+
+html[data-bs-theme="dark"] .badge.bg-success-subtle {
+    background-color: #153e34 !important;
+    color: #a5ead3 !important;
+}
+
+html[data-bs-theme="dark"] .badge.bg-danger-subtle {
+    background-color: #51252c !important;
+    color: #ffb6c2 !important;
+}
+
+@media (max-width: 767.98px) {
+    .mk-ledger-details {
+        min-width: 220px;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 - Loan Management
+|--------------------------------------------------------------------------
+*/
+
+.mk-loan-event {
+    position: relative;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--mk-border);
+}
+
+.mk-loan-event:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.mk-loan-event-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--mk-icon-bg);
+    color: var(--mk-icon-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mk-loan-event-icon i {
+    font-size: .55rem;
+}
+
+.mk-loan-event strong {
+    font-size: .9rem;
+}
+
+.mk-loan-event p {
+    line-height: 1.7;
+}
+
+/* Consistent financial number display */
+
+.metric-value,
+.mk-table td,
+.mk-loan-amount {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Review forms */
+
+.card-soft textarea.form-control {
+    line-height: 1.7;
+    resize: vertical;
+}
+
+/* Theme-aware loan surfaces */
+
+html[data-bs-theme="dark"] .mk-loan-event {
+    border-color: var(--mk-border);
+}
+
+html[data-bs-theme="dark"] .mk-loan-event-icon {
+    background: var(--mk-icon-bg);
+    color: var(--mk-icon-color);
+}
+
+@media (max-width: 767.98px) {
+    .mk-loan-event {
+        padding-bottom: 1.2rem;
+    }
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 - Loan Repayments
+|--------------------------------------------------------------------------
+*/
+
+.mk-repayment-summary {
+    border: 1px solid var(--mk-border);
+    background: var(--mk-surface);
+    border-radius: 14px;
+    padding: 1.25rem;
+}
+
+.mk-repayment-summary .amount {
+    font-size: 1.65rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    color: var(--mk-text);
+}
+
+.mk-table .badge {
+    font-weight: 650;
+    letter-spacing: .01em;
+}
+
+html[data-bs-theme="dark"] .mk-repayment-summary {
+    background: var(--mk-surface);
+    border-color: var(--mk-border);
+}
+
+html[data-bs-theme="dark"] .mk-table td {
+    color: var(--mk-text);
+}
+
+@media (max-width: 767.98px) {
+    .mk-repayment-summary {
+        padding: 1rem;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mokhatlo 2.0 — Financial Analytics Dashboard
+|--------------------------------------------------------------------------
+*/
+
+.mk-analytics-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 2rem;
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(255,255,255,.17),
+            transparent 38%
+        ),
+        linear-gradient(
+            125deg,
+            #30226f 0%,
+            #5741bd 58%,
+            #7563e7 100%
+        );
+    color: #fff;
+}
+
+.mk-analytics-hero h1 {
+    font-size: clamp(1.65rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -.035em;
+}
+
+.mk-analytics-hero p {
+    color: rgba(255,255,255,.76);
+}
+
+.mk-analytics-kicker {
+    color: #e3dbff;
+    font-size: .75rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: .11em;
+}
+
+.mk-analytics-hero .form-select {
+    min-width: 155px;
+    border-color: rgba(255,255,255,.25);
+    background-color: rgba(255,255,255,.13);
+    color: #fff;
+}
+
+.mk-analytics-hero .form-select option {
+    color: #182033;
+    background: #fff;
+}
+
+.mk-hero-chip {
+    font-size: .72rem;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,.2);
+    color: rgba(255,255,255,.93);
+    border-radius: 30px;
+    padding: .45rem .8rem;
+    background: rgba(255,255,255,.09);
+}
+
+.mk-analytics-card,
+.mk-chart-card {
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 17px;
+    box-shadow: 0 4px 20px rgba(20,24,48,.035);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.mk-analytics-card {
+    padding: 1.4rem;
+}
+
+.mk-chart-card {
+    padding: 1.5rem;
+}
+
+.mk-analytics-card:hover,
+.mk-chart-card:hover {
+    border-color: rgba(120,102,245,.35);
+    box-shadow: 0 10px 30px rgba(60,48,120,.07);
+}
+
+.mk-analytics-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.mk-analytics-icon.tone-purple {
+    background: rgba(120,102,245,.13);
+    color: #7866f5;
+}
+
+.mk-analytics-icon.tone-blue {
+    background: rgba(63,140,255,.12);
+    color: #3f8cff;
+}
+
+.mk-analytics-icon.tone-teal {
+    background: rgba(25,182,162,.12);
+    color: #19b6a2;
+}
+
+.mk-analytics-icon.tone-amber {
+    background: rgba(239,168,64,.13);
+    color: #dc941f;
+}
+
+.mk-analytics-label {
+    font-size: .78rem;
+    color: var(--bs-secondary-color);
+    font-weight: 600;
+    margin-bottom: .45rem;
+}
+
+.mk-analytics-value {
+    font-size: clamp(1.25rem, 2vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.mk-chart-heading {
+    font-size: 1.02rem;
+    font-weight: 750;
+    margin-bottom: .5rem;
+    letter-spacing: -.015em;
+}
+
+.mk-chart-stage {
+    position: relative;
+    width: 100%;
+    height: 325px;
+}
+
+.mk-chart-stage-small {
+    height: 265px;
+}
+
+.mk-chart-stage canvas {
+    max-width: 100%;
+}
+
+html[data-bs-theme="dark"] .mk-analytics-card,
+html[data-bs-theme="dark"] .mk-chart-card {
+    box-shadow: none;
+}
+
+html[data-bs-theme="dark"] .mk-analytics-card:hover,
+html[data-bs-theme="dark"] .mk-chart-card:hover {
+    border-color: rgba(149,135,255,.45);
+}
+
+@media (max-width: 767.98px) {
+    .mk-analytics-hero {
+        padding: 1.3rem;
+        border-radius: 15px;
+    }
+
+    .mk-analytics-card {
+        padding: 1.15rem;
+    }
+
+    .mk-chart-card {
+        padding: 1.2rem;
+    }
+
+    .mk-chart-stage {
+        height: 270px;
+    }
+
+    .mk-chart-stage-small {
+        height: 230px;
+    }
+}

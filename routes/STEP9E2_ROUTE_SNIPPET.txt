@@ -1,0 +1,19 @@
+// Import at top of routes/web.php:
+use App\Http\Controllers\LegacyContributionObligationController;
+
+// Place INSIDE your existing Route::middleware('society')->group() nested under auth/verified.
+// Do not add a second copy of the existing auth/society routes.
+Route::get('/legacy/reconciliation/obligations', [LegacyContributionObligationController::class, 'index'])
+    ->name('legacy.obligations.index');
+Route::post('/legacy/reconciliation/obligations/runs/{run}/attributions/{attribution}/link',
+    [LegacyContributionObligationController::class, 'link'])
+    ->whereNumber('run')->whereNumber('attribution')->middleware('throttle:15,1')
+    ->name('legacy.obligations.link');
+Route::post('/legacy/reconciliation/obligations/runs/{run}/attributions/{attribution}/create-link',
+    [LegacyContributionObligationController::class, 'createAndLink'])
+    ->whereNumber('run')->whereNumber('attribution')->middleware('throttle:10,1')
+    ->name('legacy.obligations.create-link');
+Route::post('/legacy/reconciliation/obligations/runs/{run}/links/{link}/reverse',
+    [LegacyContributionObligationController::class, 'reverse'])
+    ->whereNumber('run')->whereNumber('link')->middleware('throttle:10,1')
+    ->name('legacy.obligations.reverse');

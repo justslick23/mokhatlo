@@ -1,0 +1,28 @@
+// Add inside or outside your existing web.php groups (these use their own group).
+// Requires Step 9F files above and existing 'society' middleware alias.
+Route::middleware(['auth', 'verified', 'society'])
+    ->prefix('legacy/finalize')
+    ->name('legacy.finalize.')
+    ->group(function () {
+        Route::get('/', [\App\Http\Controllers\LegacyFinalizationController::class, 'index'])->name('index');
+        Route::post('/penalties/{review}', [\App\Http\Controllers\LegacyFinalizationController::class, 'penalty'])->whereNumber('review')->middleware('throttle:10,1')->name('penalty');
+        Route::post('/clearing/prepare', [\App\Http\Controllers\LegacyFinalizationController::class, 'prepare'])->middleware('throttle:5,1')->name('clearing.prepare');
+        Route::post('/clearing/approve', [\App\Http\Controllers\LegacyFinalizationController::class, 'approve'])->middleware('throttle:5,1')->name('clearing.approve');
+        Route::post('/clearing/post', [\App\Http\Controllers\LegacyFinalizationController::class, 'post'])->middleware('throttle:5,1')->name('clearing.post');
+    });
+
+// Important: append AFTER all existing payout routes are defined.
+// This attaches a fail-closed safety gate without registering duplicate routes.
+foreach ([
+    'payouts.drafts.store',
+    'payouts.drafts.reconcile',
+    'payouts.drafts.approve',
+    'payouts.drafts.start',
+    'payouts.batches.items.pay',
+    'payouts.batches.complete',
+] as $payoutRouteName) {
+    $payoutRoute = Route::getRoutes()->getByName($payoutRouteName);
+    if ($payoutRoute) {
+        $payoutRoute->middleware(\App\Http\Middleware\BlockUnsafeLegacyPayouts::class);
+    }
+}

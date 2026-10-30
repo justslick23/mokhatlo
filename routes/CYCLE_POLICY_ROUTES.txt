@@ -1,0 +1,9 @@
+// Configure the policy for an imported existing draft cycle.
+Route::middleware(['auth', 'verified', 'society'])->group(function () {
+    Route::get('/cycles/{cycle}/policy',
+        [\App\Http\Controllers\CyclePolicySetupController::class, 'edit'])
+        ->whereNumber('cycle')->name('cycles.policy.edit');
+    Route::put('/cycles/{cycle}/policy',
+        [\App\Http\Controllers\CyclePolicySetupController::class, 'update'])
+        ->whereNumber('cycle')->middleware('throttle:10,1')->name('cycles.policy.update');
+});
